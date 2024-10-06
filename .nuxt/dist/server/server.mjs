@@ -3,7 +3,7 @@ import { $fetch } from "ofetch";
 import { baseURL } from "#internal/nuxt/paths";
 import { createHooks } from "hookable";
 import { getContext } from "unctx";
-import { sanitizeStatusCode, createError as createError$1, getRequestHeaders, getRequestHeader, setCookie, getCookie, deleteCookie } from "h3";
+import { sanitizeStatusCode, createError as createError$1, appendHeader, getRequestHeaders, getRequestHeader, setCookie, getCookie, deleteCookie } from "h3";
 import { getActiveHead, CapoPlugin } from "unhead";
 import { defineHeadPlugin } from "@unhead/shared";
 import { START_LOCATION, createMemoryHistory, createRouter as createRouter$1, useRoute as useRoute$1, RouterView } from "vue-router";
@@ -800,7 +800,7 @@ const generateRouteKey$1 = (routeProps, override) => {
 const wrapInKeepAlive = (props, children) => {
   return { default: () => children };
 };
-function toArray(value) {
+function toArray$1(value) {
   return Array.isArray(value) ? value : [value];
 }
 async function getRouteRules(url) {
@@ -956,7 +956,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
       routerBase += "#";
     }
     const history = ((_a = routerOptions.history) == null ? void 0 : _a.call(routerOptions, routerBase)) ?? createMemoryHistory(routerBase);
-    const routes = routerOptions.routes ? ([__temp, __restore] = executeAsync(() => routerOptions.routes(_routes)), __temp = await __temp, __restore(), __temp) ?? _routes : _routes;
+    const routes2 = routerOptions.routes ? ([__temp, __restore] = executeAsync(() => routerOptions.routes(_routes)), __temp = await __temp, __restore(), __temp) ?? _routes : _routes;
     let startPosition;
     const router = createRouter$1({
       ...routerOptions,
@@ -977,7 +977,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
         }
       },
       history,
-      routes
+      routes: routes2
     });
     nuxtApp.vueApp.use(router);
     const previousRoute = shallowRef(router.currentRoute.value);
@@ -1068,7 +1068,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
           if (!componentMiddleware) {
             continue;
           }
-          for (const entry2 of toArray(componentMiddleware)) {
+          for (const entry2 of toArray$1(componentMiddleware)) {
             middlewareEntries.add(entry2);
           }
         }
@@ -1334,7 +1334,6 @@ const vueI18nConfigs = [];
 const normalizedLocales = [];
 const NUXT_I18N_MODULE_ID = "@nuxtjs/i18n";
 const parallelPlugin = false;
-const isSSG = false;
 const DEFAULT_DYNAMIC_PARAMS_KEY = "nuxtI18n";
 const DEFAULT_COOKIE_KEY = "i18n_redirected";
 const SWITCH_LOCALE_PATH_LINK_IDENTIFIER = "nuxt-i18n-slp";
@@ -1855,6 +1854,9 @@ function createLocaleFromRouteGetter() {
   };
   return getLocaleFromRoute;
 }
+function toArray(value) {
+  return Array.isArray(value) ? value : [value];
+}
 const useStateKeyPrefix = "$s";
 function useState(...args) {
   const autoKey = typeof args[args.length - 1] === "string" ? args.pop() : void 0;
@@ -1880,6 +1882,9 @@ function useState(...args) {
     state.value = initialValue;
   }
   return state;
+}
+function _setLocale(i18n, locale) {
+  return callVueI18nInterfaces(i18n, "setLocale", locale);
 }
 function setCookieLocale(i18n, locale) {
   return callVueI18nInterfaces(i18n, "setLocaleCookie", locale);
@@ -1985,18 +1990,12 @@ function detectRedirect({
   routeLocaleGetter,
   calledWithRouting = false
 }) {
-  const nuxtApp = useNuxtApp();
+  useNuxtApp();
   const common = initCommonComposableOptions();
   const { strategy, differentDomains } = common.runtimeConfig.public.i18n;
   let redirectPath = "";
   const { fullPath: toFullPath } = route.to;
-  if (!differentDomains && (calledWithRouting || strategy !== "no_prefix") && routeLocaleGetter(route.to) !== targetLocale) {
-    const routePath = nuxtApp.$switchLocalePath(targetLocale) || nuxtApp.$localePath(toFullPath, targetLocale);
-    if (isString(routePath) && routePath && !isEqual(routePath, toFullPath) && !routePath.startsWith("//")) {
-      redirectPath = !(route.from && route.from.fullPath === routePath) ? routePath : "";
-    }
-  }
-  if ((differentDomains || isSSG) && routeLocaleGetter(route.to) !== targetLocale) {
+  if ((differentDomains || false) && routeLocaleGetter(route.to) !== targetLocale) {
     const routePath = switchLocalePath(common, targetLocale, route.to);
     if (isString(routePath) && routePath && !isEqual(routePath, toFullPath) && !routePath.startsWith("//")) {
       redirectPath = routePath;
@@ -2130,6 +2129,13 @@ function useRequestHeaders(include) {
     }
   }
   return headers;
+}
+function prerenderRoutes(path) {
+  if (!import.meta.prerender) {
+    return;
+  }
+  const paths = toArray(path);
+  appendHeader(useRequestEvent(), "x-nitro-prerender", paths.map((p) => encodeURIComponent(p)).join(", "));
 }
 const CookieDefaults = {
   path: "/",
@@ -2277,6 +2283,13 @@ function detectBrowserLanguage(route, detectLocaleContext, locale = "") {
   }
   const { strategy } = (/* @__PURE__ */ useRuntimeConfig()).public.i18n;
   const { ssg, callType, firstAccess, localeCookie } = detectLocaleContext;
+  if (strategy === "no_prefix" && true) {
+    return {
+      locale: "",
+      reason: "detect_ignore_on_ssg"
+      /* SSG_IGNORE */
+    };
+  }
   if (!firstAccess) {
     return {
       locale: strategy === "no_prefix" ? locale : "",
@@ -7344,7 +7357,7 @@ const i18n_sq1MuCrqbC = /* @__PURE__ */ defineNuxtPlugin({
       getLocaleFromRoute,
       getDefaultLocale(runtimeI18n.defaultLocale),
       {
-        ssg: "normal",
+        ssg: runtimeI18n.strategy === "no_prefix" ? "ssg_ignore" : "normal",
         callType: "setup",
         firstAccess: true,
         localeCookie: getLocaleCookie(localeCookie, _detectBrowserLanguage, runtimeI18n.defaultLocale)
@@ -7362,6 +7375,25 @@ const i18n_sq1MuCrqbC = /* @__PURE__ */ defineNuxtPlugin({
     const i18n = createI18n({ ...vueI18nOptions, locale: initialLocale });
     let notInitialSetup = true;
     const isInitialLocaleSetup = (locale) => initialLocale !== locale && notInitialSetup;
+    let ssgModeInitialSetup = true;
+    const isSSGModeInitialSetup = () => ssgModeInitialSetup;
+    if (isSSGModeInitialSetup() && runtimeI18n.strategy === "no_prefix" && false) {
+      const initialLocaleCookie = localeCookie.value;
+      nuxt.hook("app:mounted", () => {
+        const detected = detectBrowserLanguage(
+          route,
+          {
+            ssg: "ssg_setup",
+            callType: "setup",
+            firstAccess: true,
+            localeCookie: initialLocaleCookie
+          },
+          initialLocale
+        );
+        _setLocale(i18n, detected.locale);
+        ssgModeInitialSetup = false;
+      });
+    }
     extendI18n(i18n, {
       locales: runtimeI18n.configLocales,
       localeCodes,
@@ -7598,7 +7630,7 @@ const i18n_sq1MuCrqbC = /* @__PURE__ */ defineNuxtPlugin({
             return getLocale$1(i18n) || getDefaultLocale(runtimeI18n.defaultLocale);
           },
           {
-            ssg: "normal",
+            ssg: isSSGModeInitialSetup() && runtimeI18n.strategy === "no_prefix" ? "ssg_ignore" : "normal",
             callType: "routing",
             firstAccess: routeChangeCount === 0,
             localeCookie: getLocaleCookie(localeCookie, _detectBrowserLanguage, runtimeI18n.defaultLocale)
@@ -7627,13 +7659,48 @@ const i18n_sq1MuCrqbC = /* @__PURE__ */ defineNuxtPlugin({
     );
   }
 });
+let routes;
+const prerender_server_LXx1wM9sKF = /* @__PURE__ */ defineNuxtPlugin(async () => {
+  let __temp, __restore;
+  if (!import.meta.prerender || routerOptions.hashMode) {
+    return;
+  }
+  if (routes && !routes.length) {
+    return;
+  }
+  routes || (routes = Array.from(processRoutes(([__temp, __restore] = executeAsync(() => {
+    var _a;
+    return (_a = routerOptions.routes) == null ? void 0 : _a.call(routerOptions, _routes);
+  }), __temp = await __temp, __restore(), __temp) ?? _routes)));
+  const batch = routes.splice(0, 10);
+  prerenderRoutes(batch);
+});
+const OPTIONAL_PARAM_RE = /^\/?:.*(?:\?|\(\.\*\)\*)$/;
+function processRoutes(routes2, currentPath = "/", routesToPrerender = /* @__PURE__ */ new Set()) {
+  var _a;
+  for (const route of routes2) {
+    if (OPTIONAL_PARAM_RE.test(route.path) && !((_a = route.children) == null ? void 0 : _a.length)) {
+      routesToPrerender.add(currentPath);
+    }
+    if (route.path.includes(":")) {
+      continue;
+    }
+    const fullPath = joinURL(currentPath, route.path);
+    routesToPrerender.add(fullPath);
+    if (route.children) {
+      processRoutes(route.children, fullPath, routesToPrerender);
+    }
+  }
+  return routesToPrerender;
+}
 const plugins = [
   unhead_KgADcZ0jPj,
   plugin,
   revive_payload_server_eJ33V7gbc6,
   components_plugin_KR1HBZs4kY,
   switch_locale_path_ssr_5csfIgkrBP,
-  i18n_sq1MuCrqbC
+  i18n_sq1MuCrqbC,
+  prerender_server_LXx1wM9sKF
 ];
 const layouts = {
   default: () => import("./_nuxt/default-DDKnhjLR.js")
@@ -7865,7 +7932,7 @@ const __nuxt_component_0 = defineComponent({
 function _mergeTransitionProps(routeProps) {
   const _props = routeProps.map((prop) => ({
     ...prop,
-    onAfterLeave: prop.onAfterLeave ? toArray(prop.onAfterLeave) : void 0
+    onAfterLeave: prop.onAfterLeave ? toArray$1(prop.onAfterLeave) : void 0
   }));
   return defu(..._props);
 }
