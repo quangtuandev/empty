@@ -2,3 +2,13 @@ body {
     background: url("../images/body.png") #0d0d0d;
 }
 
+a {
+    color: #E4D3B0;
+    text-decoration: none;
+    &:hover {
+        color: #F4E1A1;
+    }
+}
+.fs-20 {
+    font-size: 20px;
+}
