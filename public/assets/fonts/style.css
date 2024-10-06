@@ -67,13 +67,6 @@
     font-weight: 700;
     src: local('Myriad Pro Bold Condensed Italic'), url('MYRIADPRO-BOLDCONDIT.woff') format('woff');
 }
-
-@font-face {
-    font-family: 'AveriaSerifLibre-Regular';
-    font-style: normal;
-    font-weight: normal;
-    src: local('AveriaSerifLibre-Regular'), url('AveriaSerifLibre-Regular.ttf') format('ttf');
-}
 @font-face {
     font-family: 'iCielBCPortico-Regular';
     font-style: normal;

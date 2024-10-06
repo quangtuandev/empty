@@ -11,7 +11,7 @@
             </div>
             <div class="col-12 col-md-6  d-md-none d-block">
                 <div class="position-relative">
-                    <!-- <Mascot class="position-absolute top-0 d-none d-lg-inline-block" /> -->
+                    <Mascot class="position-absolute top-0 d-lg-inline-block" />
                     <img class="mw-100" src="~/assets/images/product.png" alt="" srcset="">
                 </div>
             </div>
@@ -57,15 +57,21 @@
                             id="floatingTextarea2" style="height: 100px"></textarea>
                         <label for="floatingTextarea2">Message</label>
                     </div>
-                    <div class="text-center text-md-start">
+                    <div class="text-center text-md-start mb-0 mb-md-5">
                         <button type="submit" class="btn contact-form__btn">SEND</button>
                     </div>
                 </form>
             </div>
         </div>
+        <div class="col-12 d-md-none text-center">
+            <a href="#">
+                <img class="mascot-border" src="~/assets/images/logo.svg" alt="" srcset="" />
+            </a>
+            <p class="d-block d-md-none copyright">A product by Viet Uc Food & Co</p>
+        </div>
         <div class="col-12 col-md-6">
             <div class="position-relative d-none d-md-block">
-                <!-- <Mascot class="position-absolute top-0 d-none d-lg-inline-block" /> -->
+                <Mascot class="position-absolute top-0" />
                 <img class="mw-100" src="~/assets/images/product.png" alt="" srcset="">
             </div>
         </div>
@@ -79,10 +85,11 @@ const checkInput = ($event) => {
 </script>
 <style lang="scss">
 @mixin title-style() {
-    font-family: 'iCielBCPortico-Regular';
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 36px;
+    font-family: iCielSupaMegaFantastic-Caps;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 48px;
+    text-align: left;
     color: #8A724A;
 }
 
@@ -94,6 +101,10 @@ const checkInput = ($event) => {
     color: #CCCCCC;
     outline: none;
     box-shadow: none;
+    font-family: "Averia Serif Libre", serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
 }
 
 @mixin button-primary($padding: 10px 20px) {
@@ -118,6 +129,14 @@ const checkInput = ($event) => {
 }
 
 .contact {
+    .copyright {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: center;
+        color: #FFFFFF;
+    }
+
     margin-top: 70px;
 
     @media screen and (max-width: 768px) {
@@ -146,9 +165,9 @@ const checkInput = ($event) => {
 
         &__description {
             color: #8A724A;
-            font-family: Myriad Pro;
-            font-size: 20px;
-            font-weight: 600;
+            font-family: iCielSupaMegaFantastic-Caps;
+            font-size: 44px;
+            font-weight: 700;
             line-height: 30px;
 
             @media screen and (max-width: 768px) {
@@ -166,7 +185,7 @@ const checkInput = ($event) => {
         }
 
         &__item {
-            font-family: Myriad Pro;
+            font-family: "Averia Serif Libre", serif;
             font-size: 14px;
             font-style: normal;
             font-weight: 400;
@@ -206,14 +225,14 @@ const checkInput = ($event) => {
         .form-floating>.form-select~label {
             color: #525252;
             --bs-body-bg: transparent;
-            font-family: AveriaSerifLibre-Regular
+            font-family: "Averia Serif Libre", serif;
         }
 
         .form-floating {
             >label {
                 color: #525252;
                 --bs-body-bg: transparent;
-                font-family: AveriaSerifLibre-Regular
+                font-family: "Averia Serif Libre", serif;
             }
 
             .form-control {

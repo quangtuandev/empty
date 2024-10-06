@@ -13,7 +13,7 @@
         <div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarSupportedContent">
           <ul class="navbar-nav mb-2 mb-lg-0 mt-5 mt-md-0">
             <li class="nav-item">
-              <nuxt-link to="/" class="nav-link">Product</nuxt-link>
+              <nuxt-link class="nav-link">Product</nuxt-link>
             </li>
             <li class="nav-item">
               <nuxt-link class="nav-link" to="/contact">Contact</nuxt-link>
@@ -60,8 +60,8 @@ onDeactivated(() => {
   font-family: 'iCielBCPortico-Regular';
   font-weight: 400;
   text-transform: uppercase;
-  color: #FFFFFF;
-  background: #8A724A;
+  color: #E4D3B0;
+  background: #801619;
   padding: 8px 32px;
   border-radius: 56px;
   border: none;
@@ -73,8 +73,8 @@ onDeactivated(() => {
   text-align: center;
 
   &:hover {
-    color: #E4D3B0;
-    background: #801619;
+    color: #FFFFFF;
+    background: #8A724A;
     transform: all .3s ease;
   }
 }
@@ -132,7 +132,7 @@ onDeactivated(() => {
       top: 70px;
       background-color: #0D0D0DF5;
       backdrop-filter: blur(12px);
-      // min-height: 340px;
+      z-index: 99;
     }
 
     .navbar-nav {

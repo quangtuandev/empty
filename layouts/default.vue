@@ -1,8 +1,10 @@
 <template>
     <div class="layout">
-        <the-header />
-        <div class="container">
-            <NuxtPage />
+        <div>
+            <the-header />
+            <div class="container">
+                <NuxtPage />
+            </div>
         </div>
         <the-footer />
     </div>
@@ -14,5 +16,8 @@ import TheFooter from '~/components/common/footer.vue'
 <style lang="scss" scoped>
 .layout {
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 </style>
