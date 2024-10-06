@@ -829,12 +829,12 @@ const _routes = [
   {
     name: "contact",
     path: "/contact",
-    component: () => import('./contact-CiUjx3GK.mjs')
+    component: () => import('./contact-DEkudGKe.mjs')
   },
   {
     name: "index",
     path: "/",
-    component: () => import('./index-CseHTZ2D.mjs')
+    component: () => import('./index-BVdfqgJk.mjs')
   }
 ];
 const _wrapIf = (component, props, slots) => {
@@ -1345,6 +1345,7 @@ const vueI18nConfigs = [];
 const normalizedLocales = [];
 const NUXT_I18N_MODULE_ID = "@nuxtjs/i18n";
 const parallelPlugin = false;
+const isSSG = false;
 const DEFAULT_DYNAMIC_PARAMS_KEY = "nuxtI18n";
 const DEFAULT_COOKIE_KEY = "i18n_redirected";
 const SWITCH_LOCALE_PATH_LINK_IDENTIFIER = "nuxt-i18n-slp";
@@ -1894,9 +1895,6 @@ function useState(...args) {
   }
   return state;
 }
-function _setLocale(i18n, locale) {
-  return callVueI18nInterfaces(i18n, "setLocale", locale);
-}
 function setCookieLocale(i18n, locale) {
   return callVueI18nInterfaces(i18n, "setLocaleCookie", locale);
 }
@@ -2001,12 +1999,18 @@ function detectRedirect({
   routeLocaleGetter,
   calledWithRouting = false
 }) {
-  useNuxtApp();
+  const nuxtApp = useNuxtApp();
   const common = initCommonComposableOptions();
   const { strategy, differentDomains } = common.runtimeConfig.public.i18n;
   let redirectPath = "";
   const { fullPath: toFullPath } = route.to;
-  if ((differentDomains || false) && routeLocaleGetter(route.to) !== targetLocale) {
+  if (!differentDomains && (calledWithRouting || strategy !== "no_prefix") && routeLocaleGetter(route.to) !== targetLocale) {
+    const routePath = nuxtApp.$switchLocalePath(targetLocale) || nuxtApp.$localePath(toFullPath, targetLocale);
+    if (isString(routePath) && routePath && !isEqual(routePath, toFullPath) && !routePath.startsWith("//")) {
+      redirectPath = !(route.from && route.from.fullPath === routePath) ? routePath : "";
+    }
+  }
+  if ((differentDomains || isSSG) && routeLocaleGetter(route.to) !== targetLocale) {
     const routePath = switchLocalePath(common, targetLocale, route.to);
     if (isString(routePath) && routePath && !isEqual(routePath, toFullPath) && !routePath.startsWith("//")) {
       redirectPath = routePath;
@@ -2291,13 +2295,6 @@ function detectBrowserLanguage(route, detectLocaleContext, locale = "") {
   }
   const { strategy } = (/* @__PURE__ */ useRuntimeConfig()).public.i18n;
   const { ssg, callType, firstAccess, localeCookie } = detectLocaleContext;
-  if (strategy === "no_prefix" && true) {
-    return {
-      locale: "",
-      reason: "detect_ignore_on_ssg"
-      /* SSG_IGNORE */
-    };
-  }
   if (!firstAccess) {
     return {
       locale: strategy === "no_prefix" ? locale : "",
@@ -7266,7 +7263,7 @@ const i18n_sq1MuCrqbC = /* @__PURE__ */ defineNuxtPlugin({
       getLocaleFromRoute,
       getDefaultLocale(runtimeI18n.defaultLocale),
       {
-        ssg: runtimeI18n.strategy === "no_prefix" ? "ssg_ignore" : "normal",
+        ssg: "normal",
         callType: "setup",
         firstAccess: true,
         localeCookie: getLocaleCookie(localeCookie, _detectBrowserLanguage, runtimeI18n.defaultLocale)
@@ -7284,25 +7281,6 @@ const i18n_sq1MuCrqbC = /* @__PURE__ */ defineNuxtPlugin({
     const i18n = createI18n({ ...vueI18nOptions, locale: initialLocale });
     let notInitialSetup = true;
     const isInitialLocaleSetup = (locale) => initialLocale !== locale && notInitialSetup;
-    let ssgModeInitialSetup = true;
-    const isSSGModeInitialSetup = () => ssgModeInitialSetup;
-    if (isSSGModeInitialSetup() && runtimeI18n.strategy === "no_prefix" && false) {
-      const initialLocaleCookie = localeCookie.value;
-      nuxt.hook("app:mounted", () => {
-        const detected = detectBrowserLanguage(
-          route,
-          {
-            ssg: "ssg_setup",
-            callType: "setup",
-            firstAccess: true,
-            localeCookie: initialLocaleCookie
-          },
-          initialLocale
-        );
-        _setLocale(i18n, detected.locale);
-        ssgModeInitialSetup = false;
-      });
-    }
     extendI18n(i18n, {
       locales: runtimeI18n.configLocales,
       localeCodes,
@@ -7539,7 +7517,7 @@ const i18n_sq1MuCrqbC = /* @__PURE__ */ defineNuxtPlugin({
             return getLocale$1(i18n) || getDefaultLocale(runtimeI18n.defaultLocale);
           },
           {
-            ssg: isSSGModeInitialSetup() && runtimeI18n.strategy === "no_prefix" ? "ssg_ignore" : "normal",
+            ssg: "normal",
             callType: "routing",
             firstAccess: routeChangeCount === 0,
             localeCookie: getLocaleCookie(localeCookie, _detectBrowserLanguage, runtimeI18n.defaultLocale)
@@ -7612,7 +7590,7 @@ const plugins = [
   prerender_server_LXx1wM9sKF
 ];
 const layouts = {
-  default: () => import('./default-DDKnhjLR.mjs')
+  default: () => import('./default-DaaGFxbq.mjs')
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
