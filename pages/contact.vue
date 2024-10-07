@@ -21,49 +21,63 @@
             </div>
             <div class="contact-form">
                 <h2 class="contact-form__title">BusIness Partner</h2>
-                <form class="gap-0 gap-md-4 d-flex flex-column">
+                <form @submit.prevent="handleSubmit" class="gap-0 gap-md-4 d-flex flex-column">
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="form-floating">
                                 <input type="text" class="form-control bg-transparent" id="floatingInput2"
+                                    v-model="form.fullName" :class="{ 'is-invalid': v$.fullName.$error }"
                                     placeholder="name@example.com" />
                                 <label for="floatingInput2">Full name</label>
                             </div>
+                            <span class="error" v-if="v$.fullName.$error">{{ v$.fullName.$errors[0].$message }}</span>
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="form-floating">
                                 <input type="email" class="form-control bg-transparent" id="floatingInput"
+                                    v-model="form.email" :class="{ 'is-invalid': v$.email.$error }"
                                     placeholder="name@example.com" />
                                 <label for="floatingInput">Email address</label>
                             </div>
+                            <span class="error" v-if="v$.email.$error">{{ v$.email.$errors[0].$message }}</span>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="form-floating">
                                 <input type="text" class="form-control bg-transparent" id="floatingPassword"
+                                    v-model="form.company" :class="{ 'is-invalid': v$.company.$error }"
                                     placeholder="Password" />
                                 <label for="floatingPassword">Your company</label>
                             </div>
+                            <span class="error" v-if="v$.company.$error">{{ v$.company.$errors[0].$message }}</span>
                         </div>
                         <div class="col-12 col-md-6">
-                            <CustomSelect :options="['whole sale', 'distribution', 'others']" :default="''"
+                            <CustomSelect :class="{ 'is-invalid': v$.target.$error }"
+                                :options="['Whole sale', 'Distribution', 'Others']" :default="'Enquiry purpose'"
                                 class="select" @input="checkInput($event)" />
+                            <span class="error" v-if="v$.target.$error">{{ v$.target.$errors[0].$message }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <textarea class="form-control bg-transparent" placeholder="Leave a comment here"
+                                    v-model="form.message" :class="{ 'is-invalid': v$.message.$error }"
+                                    id="floatingTextarea2"></textarea>
+                                <label for="floatingTextarea2">Message</label>
+                            </div>
+                            <span class="error" v-if="v$.message.$error">{{ v$.message.$errors[0].$message }}</span>
                         </div>
                     </div>
 
-                    <div class="form-floating">
-                        <textarea class="form-control bg-transparent" placeholder="Leave a comment here"
-                            id="floatingTextarea2" style="height: 100px"></textarea>
-                        <label for="floatingTextarea2">Message</label>
-                    </div>
                     <div class="text-center text-md-start mb-0 mb-md-5">
                         <button type="submit" class="btn contact-form__btn">SEND</button>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="col-12 d-md-none text-center">
+        <div class="col-12 d-md-none text-center bg-dark__theme pb-3">
             <a href="#">
                 <img class="mascot-border" src="~/assets/images/logo.svg" alt="" srcset="" />
             </a>
@@ -75,13 +89,47 @@
                 <img class="mw-100" src="~/assets/images/product.png" alt="" srcset="">
             </div>
         </div>
-        <contact-mobile />
+        <contact-mobile class="bg-dark__theme" />
     </div>
 </template>
 <script setup>
-const checkInput = ($event) => {
-    console.log("Check input", $event);
+import { reactive, computed } from 'vue'
+import { useVuelidate } from '@vuelidate/core'
+import { not, required, email, sameAs, helpers } from '@vuelidate/validators'
+
+const form = reactive({
+    fullName: '',
+    email: '',
+    company: '',
+    message: '',
+    target: ''
+})
+const rules = computed(() => {
+    return {
+        fullName: { required: helpers.withMessage('Please input Full name', required) },
+        email: {
+            required: helpers.withMessage('Please input email', required),
+            email: helpers.withMessage('Please input valid email', email)
+        },
+        company: { required: helpers.withMessage('Please input compay name', required) },
+        message: { required: helpers.withMessage('Please input message', required) },
+        target: {
+            required: helpers.withMessage('Please select enquiry purpose', required),
+            notSameAs: helpers.withMessage('Please select enquiry purpose', not(sameAs('Enquiry purpose')))
+        }
+    }
+})
+const v$ = useVuelidate(rules, form)
+function checkInput ($event) {
+    form.target = $event
+    v$.value.target.$model = $event
+    v$.value.target.$touch()
+    console.log(form.target)
 }
+async function handleSubmit() {
+    const result = await v$.value.$validate()
+}
+
 </script>
 <style lang="scss">
 @mixin title-style() {
@@ -129,12 +177,32 @@ const checkInput = ($event) => {
 }
 
 .contact {
+    .is-invalid {
+        &.custom-select {
+            .selected {
+                border-bottom: 1px solid #AE1E22;
+                color: #AE1E22;
+            }
+        }
+    }
+
+    .error {
+        color: #AE1E22;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: left;
+        font-family: "Averia Serif Libre", serif;
+    }
+
     .copyright {
         font-size: 14px;
         font-weight: 400;
         line-height: 20px;
         text-align: center;
         color: #FFFFFF;
+        border-bottom: 1px solid #292929;
+        padding-bottom: 24px;
     }
 
     margin-top: 70px;
@@ -237,6 +305,15 @@ const checkInput = ($event) => {
 
             .form-control {
                 @include reset-input();
+
+                &.is-invalid {
+                    border-bottom: 1px solid #AE1E22;
+                    color: #AE1E22;
+
+                    +label {
+                        color: #AE1E22;
+                    }
+                }
             }
 
             .form-select {

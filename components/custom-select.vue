@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-select" :tabindex="tabindex" @blur="open = false">
+  <div class="custom-select" :class="{ 'default': selectedOption }" :tabindex="tabindex" @blur="open = false">
     <div class="selected" :class="{ open: open }" @click="open = !open">
       {{ selected }}
     </div>
@@ -8,7 +8,7 @@
         selected = option;
       open = false;
       $emit('input', option);
-      ">
+      " :class="{ 'text-white': selected === option }">
         {{ option }}
       </div>
     </div>
@@ -43,9 +43,11 @@ export default {
       open: false,
     };
   },
-  mounted() {
-    this.$emit("input", this.selected);
-  },
+  computed: {
+    selectedOption() {
+      return !this.options.find((option) => option === this.selected);
+    },
+  }
 };
 </script>
 
@@ -66,10 +68,13 @@ export default {
   cursor: pointer;
   user-select: none;
   padding: 12px 16px;
-
-  font-family: AveriaSerifLibre-Regular;
+  font-family: "Averia Serif Libre", serif;
   font-size: 14px;
   font-weight: 400;
+}
+
+.custom-select.default .selected {
+  color: #525252;
 }
 
 .custom-select .selected.open {

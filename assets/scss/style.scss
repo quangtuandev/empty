@@ -1,5 +1,8 @@
 body {
     background: url("../images/body.png") #0d0d0d;
+    @media screen and (max-width: 768px) {
+        background-size: contain;
+    }
 }
 
 a {
@@ -11,4 +14,7 @@ a {
 }
 .fs-20 {
     font-size: 20px;
+}
+.bg-dark__theme {
+    background: #0d0d0d;
 }
