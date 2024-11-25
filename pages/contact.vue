@@ -128,6 +128,39 @@ function checkInput ($event) {
 }
 async function handleSubmit() {
     const result = await v$.value.$validate()
+    console.log(result)
+    if (result) {
+        try {
+            const response = await $fetch('/api/contact', {
+                method: 'POST',
+                body: form
+            })
+            console.log('Email sent successfully')
+            // Show success alert
+            const alertElement = document.createElement('div')
+            alertElement.classList.add('alert', 'alert-success', 'alert-dismissible', 'fade', 'show', 'position-fixed', 'top-0', 'start-50', 'translate-middle-x', 'mt-3')
+            alertElement.setAttribute('role', 'alert')
+            alertElement.innerHTML = `
+                Email sent successfully!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `
+            document.body.appendChild(alertElement)
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                alertElement.remove()
+            }, 3000)
+            // Reset form after successful submission
+            form.fullName = ''
+            form.email = ''
+            form.company = ''
+            form.message = ''
+            form.target = ''
+            v$.value.$reset()
+        } catch (error) {
+            console.error('Error sending email:', error)
+        }
+    }
 }
 
 </script>

@@ -22,6 +22,9 @@ export default defineNuxtConfig({
       ]
     },
   },
+  routeRules: {
+    '/': { redirect: '/contact' },
+  },
   css: [
     '@/assets/scss/style.scss'
   ],

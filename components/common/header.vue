@@ -13,7 +13,7 @@
         <div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarSupportedContent">
           <ul class="navbar-nav mb-2 mb-lg-0 mt-5 mt-md-0">
             <li class="nav-item">
-              <nuxt-link class="nav-link">Product</nuxt-link>
+              <nuxt-link class="nav-link" to="/product">Product</nuxt-link>
             </li>
             <li class="nav-item">
               <nuxt-link class="nav-link" to="/contact">Contact</nuxt-link>
