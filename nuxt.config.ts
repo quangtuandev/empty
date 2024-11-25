@@ -6,6 +6,17 @@ export default defineNuxtConfig({
       title: 'Papa Việt',
       meta: [
         { charset: 'utf-8' },
+        { name: 'description', content: 'Papa Việt - Authentic Vietnamese Restaurant' },
+        { name: 'keywords', content: 'Papa Viet, Vietnamese food, Vietnamese restaurant, Vietnamese cuisine' },
+        { property: 'og:title', content: 'Papa Việt' },
+        { property: 'og:description', content: 'Papa Việt - Authentic Vietnamese Restaurant' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:image', content: '/logo.svg' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: 'Papa Việt' },
+        { name: 'twitter:description', content: 'Papa Việt - Authentic Vietnamese Restaurant' },
+        { name: 'twitter:image', content: '/logo.svg' },
+        { name: 'robots', content: 'index, follow' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' }
       ],
       link: [

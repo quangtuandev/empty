@@ -815,7 +815,7 @@ const _routes = [
   {
     name: "contact",
     path: "/contact",
-    component: () => import("./_nuxt/contact-CK2gIzuZ.js")
+    component: () => import("./_nuxt/contact-BcuhfqwQ.js")
   },
   {
     name: "index",

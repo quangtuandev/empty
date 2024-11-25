@@ -72,7 +72,9 @@
                     </div>
 
                     <div class="text-center text-md-start mb-0 mb-md-5">
-                        <button type="submit" class="btn contact-form__btn">SEND</button>
+                        <button type="submit" class="btn contact-form__btn" :disabled="isLoading">
+                            {{ isLoading ? 'SENDING...' : 'SEND' }}
+                        </button>
                     </div>
                 </form>
             </div>
@@ -93,7 +95,7 @@
     </div>
 </template>
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive, computed, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { not, required, email, sameAs, helpers } from '@vuelidate/validators'
 
@@ -120,6 +122,8 @@ const rules = computed(() => {
     }
 })
 const v$ = useVuelidate(rules, form)
+const isLoading = ref(false)
+
 function checkInput ($event) {
     form.target = $event
     v$.value.target.$model = $event
@@ -128,8 +132,8 @@ function checkInput ($event) {
 }
 async function handleSubmit() {
     const result = await v$.value.$validate()
-    console.log(result)
     if (result) {
+        isLoading.value = true
         try {
             const response = await $fetch('/api/contact', {
                 method: 'POST',
@@ -159,6 +163,8 @@ async function handleSubmit() {
             v$.value.$reset()
         } catch (error) {
             console.error('Error sending email:', error)
+        } finally {
+            isLoading.value = false
         }
     }
 }
@@ -316,6 +322,16 @@ async function handleSubmit() {
                 margin-top: 24px;
                 margin-bottom: 24px;
 
+            }
+
+            &:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+                
+                &:hover {
+                    color: #FFFFFF;
+                    background: #8A724A;
+                }
             }
         }
 
