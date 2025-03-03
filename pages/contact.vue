@@ -1,78 +1,83 @@
 <template>
-    <div class="row contact">
-        <div class="col-12 col-md-6">
-            <div class="contact-header mt-0 mt-md-5">
-                <h1 class="contact-header__title text-uppercase">
-                    Thanks for VIsItIng
-                </h1>
-                <p class="contact-header__description text-uppercase">
-                    Become a companIon wIth us
-                </p>
+    <div class="container">
+        <div class="row contact">
+            <div class="col-12 col-md-6">
+                <div class="contact-header mt-0 mt-md-5">
+                    <h1 class="contact-header__title text-uppercase">
+                        Thanks for VIsItIng
+                    </h1>
+                    <p class="contact-header__description text-uppercase">
+                        Become a companIon wIth us
+                    </p>
+                </div>
+                <div class="col-12 col-md-6  d-md-none d-block">
+                    <div class="position-relative">
+                        <!-- <Mascot class="position-absolute top-0 d-none d-lg-inline-block" /> -->
+                        <img class="mw-100" src="~/assets/images/product.png" alt="" srcset="">
+                    </div>
+                </div>
+                <div class="contact-content d-none d-md-block">
+                    <h2 class="contact-content__title">Contact Us</h2>
+                    <Contact />
+                </div>
+                <div class="contact-form">
+                    <h2 class="contact-form__title">BusIness Partner</h2>
+                    <form class="gap-0 gap-md-4 d-flex flex-column">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-transparent" id="floatingInput2"
+                                        placeholder="name@example.com" />
+                                    <label for="floatingInput2">Full name</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control bg-transparent" id="floatingInput"
+                                        placeholder="name@example.com" />
+                                    <label for="floatingInput">Email address</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-transparent" id="floatingPassword"
+                                        placeholder="Password" />
+                                    <label for="floatingPassword">Your company</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <CustomSelect :options="['whole sale', 'distribution', 'others']" :default="''"
+                                    class="select" @input="checkInput($event)" />
+                            </div>
+                        </div>
+
+                        <div class="form-floating">
+                            <textarea class="form-control bg-transparent" placeholder="Leave a comment here"
+                                id="floatingTextarea2" style="height: 100px"></textarea>
+                            <label for="floatingTextarea2">Message</label>
+                        </div>
+                        <div class="text-center text-md-start">
+                            <button type="submit" class="btn contact-form__btn">SEND</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="col-12 col-md-6  d-md-none d-block">
-                <div class="position-relative">
+            <div class="col-12 col-md-6">
+                <div class="position-relative d-none d-md-block">
                     <!-- <Mascot class="position-absolute top-0 d-none d-lg-inline-block" /> -->
                     <img class="mw-100" src="~/assets/images/product.png" alt="" srcset="">
                 </div>
             </div>
-            <div class="contact-content d-none d-md-block">
-                <h2 class="contact-content__title">Contact Us</h2>
-                <Contact />
-            </div>
-            <div class="contact-form">
-                <h2 class="contact-form__title">BusIness Partner</h2>
-                <form class="gap-0 gap-md-4 d-flex flex-column">
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control bg-transparent" id="floatingInput2"
-                                    placeholder="name@example.com" />
-                                <label for="floatingInput2">Full name</label>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="form-floating">
-                                <input type="email" class="form-control bg-transparent" id="floatingInput"
-                                    placeholder="name@example.com" />
-                                <label for="floatingInput">Email address</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control bg-transparent" id="floatingPassword"
-                                    placeholder="Password" />
-                                <label for="floatingPassword">Your company</label>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <CustomSelect :options="['whole sale', 'distribution', 'others']" :default="''"
-                                class="select" @input="checkInput($event)" />
-                        </div>
-                    </div>
-
-                    <div class="form-floating">
-                        <textarea class="form-control bg-transparent" placeholder="Leave a comment here"
-                            id="floatingTextarea2" style="height: 100px"></textarea>
-                        <label for="floatingTextarea2">Message</label>
-                    </div>
-                    <div class="text-center text-md-start">
-                        <button type="submit" class="btn contact-form__btn">SEND</button>
-                    </div>
-                </form>
-            </div>
+            <contact-mobile />
         </div>
-        <div class="col-12 col-md-6">
-            <div class="position-relative d-none d-md-block">
-                <!-- <Mascot class="position-absolute top-0 d-none d-lg-inline-block" /> -->
-                <img class="mw-100" src="~/assets/images/product.png" alt="" srcset="">
-            </div>
-        </div>
-        <contact-mobile />
     </div>
 </template>
 <script setup>
+definePageMeta({
+  footerType: 'short', // Hoặc 'full'
+});
 const checkInput = ($event) => {
     console.log("Check input", $event);
 }
@@ -87,6 +92,9 @@ const checkInput = ($event) => {
 }
 
 @mixin reset-input() {
+    height: 52px;
+    min-height: 52px;
+    padding: 15px 16px;
     background-color: transparent;
     border: none;
     border-radius: 0;
@@ -94,6 +102,9 @@ const checkInput = ($event) => {
     color: #CCCCCC;
     outline: none;
     box-shadow: none;
+    @media (max-width: 1199px) {
+        padding: 15px 8px;
+    }
 }
 
 @mixin button-primary($padding: 10px 20px) {
@@ -119,6 +130,7 @@ const checkInput = ($event) => {
 
 .contact {
     margin-top: 70px;
+    margin-bottom: 137px;
 
     @media screen and (max-width: 768px) {
         margin-top: 24px;
@@ -146,10 +158,10 @@ const checkInput = ($event) => {
 
         &__description {
             color: #8A724A;
-            font-family: Myriad Pro;
-            font-size: 20px;
+            font-family: 'iCielSupaMegaFantastic-Caps';
+            font-size: 44px;
             font-weight: 600;
-            line-height: 30px;
+            line-height: 34px;
 
             @media screen and (max-width: 768px) {
                 text-align: center;
@@ -166,7 +178,6 @@ const checkInput = ($event) => {
         }
 
         &__item {
-            font-family: Myriad Pro;
             font-size: 14px;
             font-style: normal;
             font-weight: 400;
@@ -206,14 +217,20 @@ const checkInput = ($event) => {
         .form-floating>.form-select~label {
             color: #525252;
             --bs-body-bg: transparent;
-            font-family: AveriaSerifLibre-Regular
+            font-family: "Averia Serif Libre", serif;
         }
 
         .form-floating {
             >label {
+                padding: 16px;
+                font-size: 14px;
+                line-height: 20px;
                 color: #525252;
                 --bs-body-bg: transparent;
-                font-family: AveriaSerifLibre-Regular
+                font-family: "Averia Serif Libre", serif;
+                @media (max-width: 1199px) {
+                    padding: 16px 8px;
+                }
             }
 
             .form-control {
@@ -234,6 +251,10 @@ const checkInput = ($event) => {
                 &::after {
                     background-color: transparent;
                 }
+            }
+
+            &>.form-control-plaintext~label, &>.form-control:focus~label, &>.form-control:not(:placeholder-shown)~label, &>.form-select~label {
+                transform: scale(.85) translateY(-1rem) translateX(.15rem);
             }
         }
     }

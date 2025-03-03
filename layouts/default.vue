@@ -1,10 +1,8 @@
 <template>
     <div class="layout">
         <the-header />
-        <div class="container">
-            <NuxtPage />
-        </div>
-        <the-footer />
+        <NuxtPage />
+        <the-footer :isFull="$route.meta.footerType === 'full'" />
     </div>
 </template>
 <script setup>
@@ -14,5 +12,6 @@ import TheFooter from '~/components/common/footer.vue'
 <style lang="scss" scoped>
 .layout {
     min-height: 100vh;
+    overflow-x: hidden;
 }
 </style>
