@@ -12,6 +12,9 @@
   "dependencies": {
     "@nuxtjs/i18n": "^8.5.5",
     "aos": "^2.3.4",
+    "@vuelidate/core": "^2.0.3",
+    "@vuelidate/validators": "^2.0.4",
+    "nodemailer": "^6.9.16",
     "nuxt": "^3.13.0",
     "sass": "^1.79.4",
     "swiper": "^11.2.4",

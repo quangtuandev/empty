@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="position-relative d-inline-block">
-            <img class="mascot-models" src="~/assets/images/mascot.png" alt="" srcset="">
-            <img class="mascot-border" src="~/assets/images/mascot.svg" alt="" srcset="">
+        <div class="position-relative d-inline-block mascot">
+            <img class="mascot-models" src="~/assets/images/model.png" alt="" srcset="">
+            <img class="mascot-border" src="~/assets/images/bg-svg.svg" alt="" srcset="">
         </div>
     </div>
 </template>
@@ -13,8 +13,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .mascot {
+    background-color: #E4D3B0;
+    border-radius: 50%;
+    padding: 4px;
     &-models {
-        max-width: 150px;
+        max-width: 80px;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -22,7 +25,7 @@ export default {
     }
 
     &-border {
-        width: 190px;
+        width: 120px;
         animation: spin 15s linear infinite;
     }
 }

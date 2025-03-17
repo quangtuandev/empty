@@ -1,7 +1,11 @@
 <template>
     <div class="layout">
-        <the-header />
-        <NuxtPage />
+        <div>
+            <the-header />
+            <div class="container">
+                <NuxtPage />
+            </div>
+        </div>
         <the-footer :isFull="$route.meta.footerType === 'full'" />
     </div>
 </template>
@@ -13,5 +17,8 @@ import TheFooter from '~/components/common/footer.vue'
 .layout {
     min-height: 100vh;
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 </style>
