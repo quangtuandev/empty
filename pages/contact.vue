@@ -1,5 +1,4 @@
 <template>
-    <div class="container">
         <div class="row contact">
             <div class="col-12 col-md-6">
                 <div class="contact-header mt-0 mt-md-5">
@@ -9,60 +8,6 @@
                     <p class="contact-header__description text-uppercase">
                         Become a companIon wIth us
                     </p>
-                </div>
-                <div class="col-12 col-md-6  d-md-none d-block">
-                    <div class="position-relative">
-                        <!-- <Mascot class="position-absolute top-0 d-none d-lg-inline-block" /> -->
-                        <img class="mw-100" src="~/assets/images/product.png" alt="" srcset="">
-                    </div>
-                </div>
-                <div class="contact-content d-none d-md-block">
-                    <h2 class="contact-content__title">Contact Us</h2>
-                    <Contact />
-                </div>
-                <div class="contact-form">
-                    <h2 class="contact-form__title">BusIness Partner</h2>
-                    <form class="gap-0 gap-md-4 d-flex flex-column">
-                        <div class="row">
-                            <div class="col-12 col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control bg-transparent" id="floatingInput2"
-                                        placeholder="name@example.com" />
-                                    <label for="floatingInput2">Full name</label>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control bg-transparent" id="floatingInput"
-                                        placeholder="name@example.com" />
-                                    <label for="floatingInput">Email address</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control bg-transparent" id="floatingPassword"
-                                        placeholder="Password" />
-                                    <label for="floatingPassword">Your company</label>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <CustomSelect :options="['whole sale', 'distribution', 'others']" :default="''"
-                                    class="select" @input="checkInput($event)" />
-                            </div>
-                        </div>
-
-                        <div class="form-floating">
-                            <textarea class="form-control bg-transparent" placeholder="Leave a comment here"
-                                id="floatingTextarea2" style="height: 100px"></textarea>
-                            <label for="floatingTextarea2">Message</label>
-                        </div>
-                        <div class="text-center text-md-start">
-                            <button type="submit" class="btn contact-form__btn">SEND</button>
-                        </div>
-                    </form>
-                </div>
             </div>
             <div class="col-12 col-md-6  d-md-none d-block">
                 <div class="position-relative">
