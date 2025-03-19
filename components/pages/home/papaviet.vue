@@ -99,8 +99,8 @@ const logos = [
     }
 
     &__logos {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         gap: 20px;
     }
 
@@ -120,6 +120,7 @@ const logos = [
         .box__right {
             width: 100%;
             padding: 0 16px;
+
             p {
                 margin-bottom: 12px;
                 font-size: 14px;
@@ -130,8 +131,11 @@ const logos = [
                 margin-bottom: 20px;
             }
         }
-                .box__logos {
+
+        .box__logos {
+            grid-template-columns: repeat(5, 1fr);
             gap: 15px;
+
             img {
                 max-width: 50px;
                 object-fit: contain;

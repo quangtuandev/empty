@@ -15,8 +15,7 @@ import TheFooter from '~/components/common/footer.vue'
 </script>
 <style lang="scss" scoped>
 .layout {
-    min-height: 100vh;
-    overflow-x: hidden;
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
