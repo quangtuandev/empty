@@ -23,7 +23,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
       const _component_nuxt_link = __nuxt_component_0;
       _push(`<header${ssrRenderAttrs(mergeProps({
         class: ["header the-header", { "sticky": unref(isSticky) }]
-      }, _attrs))} data-v-ff52b3ec><nav class="navbar navbar-expand-lg" data-v-ff52b3ec><div class="container" data-v-ff52b3ec><a class="navbar-brand d-lg-none logo__mobile" href="/" data-v-ff52b3ec><img class="mascot-border"${ssrRenderAttr("src", _imports_0$1)} alt="" srcset="" data-v-ff52b3ec></a><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" data-v-ff52b3ec><span class="icon-menu" data-v-ff52b3ec></span></button><div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarSupportedContent" data-v-ff52b3ec><ul class="navbar-nav mb-2 mb-lg-0 mt-5 mt-md-0" data-v-ff52b3ec><li class="nav-item" data-v-ff52b3ec>`);
+      }, _attrs))}><nav class="navbar navbar-expand-lg"><div class="container"><a class="navbar-brand d-lg-none logo__mobile" href="/"><img class="mascot-border"${ssrRenderAttr("src", _imports_0$1)} alt="" srcset=""></a><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="icon-menu"></span></button><div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarSupportedContent"><ul class="navbar-nav mb-2 mb-lg-0 mt-5 mt-md-0"><li class="nav-item">`);
       _push(ssrRenderComponent(_component_nuxt_link, {
         to: "/",
         class: "nav-link"
@@ -39,7 +39,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
         }),
         _: 1
       }, _parent));
-      _push(`</li><li class="nav-item" data-v-ff52b3ec>`);
+      _push(`</li><li class="nav-item">`);
       _push(ssrRenderComponent(_component_nuxt_link, {
         class: "nav-link",
         to: "/contact"
@@ -55,18 +55,10 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
         }),
         _: 1
       }, _parent));
-      _push(`</li></ul><p class="d-block d-lg-none term" data-v-ff52b3ec>Papa Viet Phở - A product by Viet Uc Food &amp; Co</p><a class="header__logo navbar-brand d-none d-lg-block" href="#" data-v-ff52b3ec><img class="mascot-border"${ssrRenderAttr("src", _imports_0$1)} alt="" srcset="" data-v-ff52b3ec></a><form class="d-none d-lg-flex justify-content-end" data-v-ff52b3ec><button type="button" class="btn button-primary" data-v-ff52b3ec> Buy Now </button></form></div></div></nav></header>`);
+      _push(`</li></ul><p class="d-block d-lg-none term">Papa Viet Phở - A product by Viet Uc Food &amp; Co</p><a class="header__logo navbar-brand d-none d-lg-block" href="#"><img class="mascot-border"${ssrRenderAttr("src", _imports_0$1)} alt="" srcset=""></a><form class="d-none d-lg-flex justify-content-end"><button type="button" class="btn button-primary"> Buy Now </button></form></div></div></nav></header>`);
     };
   }
 });
-
-const _sfc_setup$3 = _sfc_main$3.setup;
-_sfc_main$3.setup = (props, ctx) => {
-  const ssrContext = useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/common/header.vue");
-  return _sfc_setup$3 ? _sfc_setup$3(props, ctx) : void 0;
-};
-const TheHeader = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-ff52b3ec"]]);
 
 const _sfc_main$2 = {};
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
@@ -141,9 +133,9 @@ const _sfc_main = {
   setup(__props) {
     return (_ctx, _push, _parent, _attrs) => {
       const _component_NuxtPage = __nuxt_component_0$1;
-      _push(`<div${ssrRenderAttrs(mergeProps({ class: "layout" }, _attrs))} data-v-f67fa83f><div data-v-f67fa83f>`);
-      _push(ssrRenderComponent(TheHeader, null, null, _parent));
-      _push(`<div class="container" data-v-f67fa83f>`);
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "layout" }, _attrs))} data-v-7cfcf2db><div data-v-7cfcf2db>`);
+      _push(ssrRenderComponent(_sfc_main$3, null, null, _parent));
+      _push(`<div class="container" data-v-7cfcf2db>`);
       _push(ssrRenderComponent(_component_NuxtPage, null, null, _parent));
       _push(`</div></div>`);
       _push(ssrRenderComponent(TheFooter, {
@@ -159,7 +151,7 @@ _sfc_main.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("layouts/default.vue");
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
-const _default = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-f67fa83f"]]);
+const _default = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-7cfcf2db"]]);
 
 export { _default as default };
 //# sourceMappingURL=default.vue.mjs.map

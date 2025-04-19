@@ -28,11 +28,11 @@ const _sfc_main = {
       _push(`<section${ssrRenderAttrs(mergeProps({
         class: "sc-papaviet",
         "data-aos": "fade-up"
-      }, _attrs))} data-v-7842e656><div class="container" data-v-7842e656><div class="box" data-v-7842e656><div class="box__left" data-v-7842e656><div class="sc-header" data-v-7842e656><h2 class="sc-header__title" data-v-7842e656>PHỞ <br class="d-none d-xl-block" data-v-7842e656>PAPA VIET</h2><div class="sc-header__sub mb-0" data-v-7842e656>FROM VIETNAM TO YOUR TABLE, READY IN MINUTES </div></div></div><div class="box__right" data-v-7842e656><div class="right__item" data-v-7842e656><p data-v-7842e656>CertIfIcate:</p><img${ssrRenderAttr("src", _imports_0)} alt="" data-v-7842e656></div><div class="right__item" data-v-7842e656><p data-v-7842e656>CLAIM LOGO:</p><div class="box__logos" data-v-7842e656><!--[-->`);
+      }, _attrs))} data-v-49e45a6d><div class="container" data-v-49e45a6d><div class="box" data-v-49e45a6d><div class="box__left" data-v-49e45a6d><div class="sc-header" data-v-49e45a6d><h2 class="sc-header__title" data-v-49e45a6d>PHỞ <br class="d-none d-xl-block" data-v-49e45a6d>PAPA VIET</h2><div class="sc-header__sub mb-0" data-v-49e45a6d>FROM VIETNAM TO YOUR TABLE, READY IN MINUTES </div></div></div><div class="box__right" data-v-49e45a6d><div class="right__item" data-v-49e45a6d><p data-v-49e45a6d>CertIfIcate:</p><img${ssrRenderAttr("src", _imports_0)} alt="" data-v-49e45a6d></div><div class="right__item" data-v-49e45a6d><p data-v-49e45a6d>CLAIM LOGO:</p><div class="box__logos" data-v-49e45a6d><!--[-->`);
       ssrRenderList(logos, (logo) => {
-        _push(`<img${ssrRenderAttr("src", logo.src)} alt="" data-v-7842e656>`);
+        _push(`<img${ssrRenderAttr("src", logo.src)} alt="" data-v-49e45a6d>`);
       });
-      _push(`<!--]--></div></div></div><div class="box__thumb d-xl-none" data-v-7842e656><img${ssrRenderAttr("src", _imports_1)} alt="" data-v-7842e656></div></div></div></section>`);
+      _push(`<!--]--></div></div></div><div class="box__thumb d-xl-none" data-v-49e45a6d><img${ssrRenderAttr("src", _imports_1)} alt="" data-v-49e45a6d></div></div></div></section>`);
     };
   }
 };
@@ -42,7 +42,7 @@ _sfc_main.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/pages/home/papaviet.vue");
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
-const __nuxt_component_4 = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-7842e656"]]);
+const __nuxt_component_4 = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-49e45a6d"]]);
 export {
   __nuxt_component_4 as default
 };

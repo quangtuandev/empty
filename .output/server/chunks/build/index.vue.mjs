@@ -1,8 +1,10 @@
-import { unref, mergeProps, withCtx, renderSlot, createBlock, createCommentVNode, openBlock, Fragment, renderList, useSSRContext, createVNode, computed } from 'vue';
-import { ssrRenderComponent, ssrRenderList, ssrRenderSlot, ssrRenderClass, ssrRenderAttrs, ssrRenderAttr, ssrInterpolate } from 'vue/server-renderer';
+import { unref, mergeProps, withCtx, renderSlot, createBlock, createCommentVNode, openBlock, Fragment, renderList, useSSRContext, createVNode, computed, reactive, ref } from 'vue';
+import { ssrRenderComponent, ssrRenderList, ssrRenderSlot, ssrRenderClass, ssrRenderAttrs, ssrRenderAttr, ssrInterpolate, ssrIncludeBooleanAttr } from 'vue/server-renderer';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { _ as _export_sfc } from './server.mjs';
+import { useVuelidate } from '@vuelidate/core';
+import { helpers, required, email } from '@vuelidate/validators';
 import '../nitro/nitro.mjs';
 import 'node:http';
 import 'node:https';
@@ -181,7 +183,7 @@ const __nuxt_component_0 = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId
 const _imports_0$4 = "" + __buildAssetsURL("banner.uRDy6k6t.jpg");
 
 const _sfc_main$5 = {};
-function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs) {
+function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
   _push(`<section${ssrRenderAttrs(mergeProps({ class: "sc-story" }, _attrs))} data-v-50df20d4><div class="container" data-v-50df20d4><div class="row" data-v-50df20d4><div class="col-md-6 order-xl-2" data-aos="fade-left" data-v-50df20d4><div class="story__thumb" data-v-50df20d4><img${ssrRenderAttr("src", _imports_0$4)} alt="" data-v-50df20d4></div></div><div class="col-md-6 d-flex align-items-center" data-aos="fade-right" data-v-50df20d4><div class="sc-header" data-v-50df20d4><h2 class="sc-header__title" data-v-50df20d4>PAPA VIET’s STORY</h2><div class="sc-header__sub" data-v-50df20d4>A LOVEING BOUL OF LEGACY</div><div class="sc-header__excerpt" data-v-50df20d4><p data-v-50df20d4> Crafted with essential ingredients, Papa Viet&#39;s Ph6 stays true to the authentic flavor. Each package contains premium rice noodles and a rich broth cube with real Australian beef.<br data-v-50df20d4> Pha broth is distinctive and challenging to reproduce, but Papa Viet has mastered it. The unmistakable aroma of slow-cooked beef bones with essential PM spices will warm you up instantly. </p><p data-v-50df20d4>HONEST-TO-VIET’S GOODNESS At Papa Viet, we live by the name of our homeland and carry the mission to preserve the authenticity of Vietnamese cuisine. Made with modern technology and old-school passion for Vietnam&#39;s most iconic noodle soup, Papa Viet&#39;s Pho is freeze-dried to keep the essence intact. The broth and real meat or veggie pieces are concentrated into a cube, saving the authentic flavor made with signature ingredients. </p></div></div></div></div></div></section>`);
 }
 const _sfc_setup$5 = _sfc_main$5.setup;
@@ -190,7 +192,7 @@ _sfc_main$5.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/pages/home/story.vue");
   return _sfc_setup$5 ? _sfc_setup$5(props, ctx) : void 0;
 };
-const __nuxt_component_1 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["ssrRender", _sfc_ssrRender$1], ["__scopeId", "data-v-50df20d4"]]);
+const __nuxt_component_1 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["ssrRender", _sfc_ssrRender], ["__scopeId", "data-v-50df20d4"]]);
 
 const _imports_0$3 = "" + __buildAssetsURL("banner.DFxA3kRI.png");
 
@@ -324,11 +326,11 @@ const _sfc_main$2 = {
       _push(`<section${ssrRenderAttrs(mergeProps({
         class: "sc-papaviet",
         "data-aos": "fade-up"
-      }, _attrs))} data-v-7842e656><div class="container" data-v-7842e656><div class="box" data-v-7842e656><div class="box__left" data-v-7842e656><div class="sc-header" data-v-7842e656><h2 class="sc-header__title" data-v-7842e656>PHỞ <br class="d-none d-xl-block" data-v-7842e656>PAPA VIET</h2><div class="sc-header__sub mb-0" data-v-7842e656>FROM VIETNAM TO YOUR TABLE, READY IN MINUTES </div></div></div><div class="box__right" data-v-7842e656><div class="right__item" data-v-7842e656><p data-v-7842e656>CertIfIcate:</p><img${ssrRenderAttr("src", _imports_0$1)} alt="" data-v-7842e656></div><div class="right__item" data-v-7842e656><p data-v-7842e656>CLAIM LOGO:</p><div class="box__logos" data-v-7842e656><!--[-->`);
+      }, _attrs))} data-v-49e45a6d><div class="container" data-v-49e45a6d><div class="box" data-v-49e45a6d><div class="box__left" data-v-49e45a6d><div class="sc-header" data-v-49e45a6d><h2 class="sc-header__title" data-v-49e45a6d>PHỞ <br class="d-none d-xl-block" data-v-49e45a6d>PAPA VIET</h2><div class="sc-header__sub mb-0" data-v-49e45a6d>FROM VIETNAM TO YOUR TABLE, READY IN MINUTES </div></div></div><div class="box__right" data-v-49e45a6d><div class="right__item" data-v-49e45a6d><p data-v-49e45a6d>CertIfIcate:</p><img${ssrRenderAttr("src", _imports_0$1)} alt="" data-v-49e45a6d></div><div class="right__item" data-v-49e45a6d><p data-v-49e45a6d>CLAIM LOGO:</p><div class="box__logos" data-v-49e45a6d><!--[-->`);
       ssrRenderList(logos, (logo) => {
-        _push(`<img${ssrRenderAttr("src", logo.src)} alt="" data-v-7842e656>`);
+        _push(`<img${ssrRenderAttr("src", logo.src)} alt="" data-v-49e45a6d>`);
       });
-      _push(`<!--]--></div></div></div><div class="box__thumb d-xl-none" data-v-7842e656><img${ssrRenderAttr("src", _imports_1)} alt="" data-v-7842e656></div></div></div></section>`);
+      _push(`<!--]--></div></div></div><div class="box__thumb d-xl-none" data-v-49e45a6d><img${ssrRenderAttr("src", _imports_1)} alt="" data-v-49e45a6d></div></div></div></section>`);
     };
   }
 };
@@ -338,21 +340,61 @@ _sfc_main$2.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/pages/home/papaviet.vue");
   return _sfc_setup$2 ? _sfc_setup$2(props, ctx) : void 0;
 };
-const __nuxt_component_4 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-7842e656"]]);
+const __nuxt_component_4 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-49e45a6d"]]);
 
 const _imports_0 = "" + __buildAssetsURL("banner.BS8bSwXJ.png");
 
-const _sfc_main$1 = {};
-function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
-  _push(`<section${ssrRenderAttrs(mergeProps({ class: "sc-connecting" }, _attrs))} data-v-c963289e><div class="container" data-v-c963289e><div class="row d-flex align-items-center" data-v-c963289e><div class="col-xl-6" data-aos="fade-right" data-v-c963289e><div class="sc-header" data-v-c963289e><h2 class="sc-header__title" data-v-c963289e>CONNECTING PARTNERS</h2><div class="sc-header__sub" data-v-c963289e>Become a companIon wIth us </div><div class="sc-header__excerpt" data-v-c963289e> Please send us feedback or ask about partnership opportunities. We are excited to explore the possibilities of collaboration. Furthermore, follow our social media to see our latest creative endeavors. </div></div><div class="contact-form" data-v-c963289e><form class="gap-0 gap-md-3 d-flex flex-column" data-v-c963289e><div class="row gx-3" data-v-c963289e><div class="col-12 col-xl-6" data-v-c963289e><div class="form-floating" data-v-c963289e><input type="email" class="form-control bg-transparent" id="floatingInput2" placeholder="name@example.com" data-v-c963289e><label for="floatingInput2" data-v-c963289e>Email</label></div></div><div class="col-12 col-xl-6" data-v-c963289e><div class="form-floating" data-v-c963289e><input type="email" class="form-control bg-transparent" id="floatingInput" placeholder="name@example.com" data-v-c963289e><label for="floatingInput" data-v-c963289e>Number Phone</label></div></div></div><div class="form-floating" data-v-c963289e><textarea class="form-control bg-transparent" placeholder="Leave a comment here" id="floatingTextarea2" data-v-c963289e></textarea><label for="floatingTextarea2" data-v-c963289e>Message</label></div><div class="" data-v-c963289e><button type="submit" class="btn contact-form__btn mb-0" data-v-c963289e>SEND</button></div></form></div></div><div class="col-xl-6 d-none d-xl-block" data-aos="fade-left" data-v-c963289e><img${ssrRenderAttr("src", _imports_0)} alt="" data-v-c963289e></div></div></div></section>`);
-}
+const _sfc_main$1 = {
+  __name: "connecting",
+  __ssrInlineRender: true,
+  setup(__props) {
+    const form = reactive({
+      email: "",
+      phone: "",
+      message: ""
+    });
+    const rules = computed(() => {
+      return {
+        email: {
+          required: helpers.withMessage("Please input email", required),
+          email: helpers.withMessage("Please input valid email", email)
+        },
+        phone: { required: helpers.withMessage("Please input phone", required) },
+        message: { required: helpers.withMessage("Please input message", required) }
+      };
+    });
+    const v$ = useVuelidate(rules, form);
+    const isLoading = ref(false);
+    return (_ctx, _push, _parent, _attrs) => {
+      _push(`<section${ssrRenderAttrs(mergeProps({ class: "sc-connecting" }, _attrs))} data-v-6aae904e><div class="container" data-v-6aae904e><div class="row d-flex align-items-center" data-v-6aae904e><div class="col-xl-6" data-aos="fade-right" data-v-6aae904e><div class="sc-header" data-v-6aae904e><h2 class="sc-header__title" data-v-6aae904e>CONNECTING PARTNERS</h2><div class="sc-header__sub" data-v-6aae904e>Become a companIon wIth us </div><div class="sc-header__excerpt" data-v-6aae904e> Please send us feedback or ask about partnership opportunities. We are excited to explore the possibilities of collaboration. Furthermore, follow our social media to see our latest creative endeavors. </div></div><div class="contact-form" data-v-6aae904e><form class="gap-0 gap-md-3 d-flex flex-column" data-v-6aae904e><div class="row gx-3" data-v-6aae904e><div class="col-12 col-xl-6" data-v-6aae904e><div class="form-floating" data-v-6aae904e><input type="email" id="floatingInput2"${ssrRenderAttr("value", form.email)} class="${ssrRenderClass([{ "is-invalid": unref(v$).email.$error }, "form-control bg-transparent"])}" placeholder="name@example.com" data-v-6aae904e><label for="floatingInput2" data-v-6aae904e>Email</label></div>`);
+      if (unref(v$).email.$error) {
+        _push(`<span class="error" data-v-6aae904e>${ssrInterpolate(unref(v$).email.$errors[0].$message)}</span>`);
+      } else {
+        _push(`<!---->`);
+      }
+      _push(`</div><div class="col-12 col-xl-6" data-v-6aae904e><div class="form-floating" data-v-6aae904e><input type="tel" id="floatingInput"${ssrRenderAttr("value", form.phone)} class="${ssrRenderClass([{ "is-invalid": unref(v$).phone.$error }, "form-control bg-transparent"])}" placeholder="name@example.com" data-v-6aae904e><label for="floatingInput" data-v-6aae904e>Number Phone</label></div>`);
+      if (unref(v$).phone.$error) {
+        _push(`<span class="error" data-v-6aae904e>${ssrInterpolate(unref(v$).phone.$errors[0].$message)}</span>`);
+      } else {
+        _push(`<!---->`);
+      }
+      _push(`</div></div><div class="form-floating" data-v-6aae904e><textarea placeholder="Leave a comment here" class="${ssrRenderClass([{ "is-invalid": unref(v$).message.$error }, "form-control bg-transparent"])}" id="floatingTextarea2" data-v-6aae904e>${ssrInterpolate(form.message)}</textarea><label for="floatingTextarea2" data-v-6aae904e>Message</label></div>`);
+      if (unref(v$).message.$error) {
+        _push(`<span class="error" data-v-6aae904e>${ssrInterpolate(unref(v$).message.$errors[0].$message)}</span>`);
+      } else {
+        _push(`<!---->`);
+      }
+      _push(`<div class="" data-v-6aae904e><button type="submit" class="btn contact-form__btn mb-0"${ssrIncludeBooleanAttr(isLoading.value) ? " disabled" : ""} data-v-6aae904e>${ssrInterpolate(isLoading.value ? "SENDING..." : "SEND")}</button></div></form></div></div><div class="col-xl-6 d-none d-xl-block" data-aos="fade-left" data-v-6aae904e><img${ssrRenderAttr("src", _imports_0)} alt="" data-v-6aae904e></div></div></div></section>`);
+    };
+  }
+};
 const _sfc_setup$1 = _sfc_main$1.setup;
 _sfc_main$1.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/pages/home/connecting.vue");
   return _sfc_setup$1 ? _sfc_setup$1(props, ctx) : void 0;
 };
-const __nuxt_component_5 = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["ssrRender", _sfc_ssrRender], ["__scopeId", "data-v-c963289e"]]);
+const __nuxt_component_5 = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-6aae904e"]]);
 
 const _sfc_main = {
   __name: "index",
