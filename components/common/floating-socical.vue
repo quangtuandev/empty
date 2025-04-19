@@ -1,12 +1,12 @@
 <template>
     <div class="floating-social">
         <div class="floating-social__item">
-            <a href="https://www.facebook.com/papavietnam" target="_blank">
+            <a href="https://www.facebook.com/papaviet.vn" target="_blank">
                 <i class="icon-facebook"></i>
             </a>
         </div>
         <div class="floating-social__item">
-            <a href="https://www.instagram.com/papavietnam" target="_blank">
+            <a href="https://www.instagram.com/papaviet.vn" target="_blank">
                 <i class="icon-instagram"></i>
             </a>
         </div>

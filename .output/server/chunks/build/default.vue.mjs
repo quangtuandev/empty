@@ -62,7 +62,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
 
 const _sfc_main$2 = {};
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
-  _push(`<div${ssrRenderAttrs(mergeProps({ class: "floating-social" }, _attrs))} data-v-dedb0247><div class="floating-social__item" data-v-dedb0247><a href="https://www.facebook.com/papavietnam" target="_blank" data-v-dedb0247><i class="icon-facebook" data-v-dedb0247></i></a></div><div class="floating-social__item" data-v-dedb0247><a href="https://www.instagram.com/papavietnam" target="_blank" data-v-dedb0247><i class="icon-instagram" data-v-dedb0247></i></a></div><div class="floating-social__item" data-v-dedb0247><a href="https://www.youtube.com/channel/UC9J9Z9Z9J9Z9J9Z9J9Z9J9Z9" target="_blank" data-v-dedb0247><i class="icon-tiktok" data-v-dedb0247></i></a></div></div>`);
+  _push(`<div${ssrRenderAttrs(mergeProps({ class: "floating-social" }, _attrs))} data-v-702a388d><div class="floating-social__item" data-v-702a388d><a href="https://www.facebook.com/papaviet.vn" target="_blank" data-v-702a388d><i class="icon-facebook" data-v-702a388d></i></a></div><div class="floating-social__item" data-v-702a388d><a href="https://www.instagram.com/papaviet.vn" target="_blank" data-v-702a388d><i class="icon-instagram" data-v-702a388d></i></a></div><div class="floating-social__item" data-v-702a388d><a href="https://www.youtube.com/channel/UC9J9Z9Z9J9Z9J9Z9J9Z9J9Z9" target="_blank" data-v-702a388d><i class="icon-tiktok" data-v-702a388d></i></a></div></div>`);
 }
 const _sfc_setup$2 = _sfc_main$2.setup;
 _sfc_main$2.setup = (props, ctx) => {
@@ -70,7 +70,7 @@ _sfc_main$2.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/common/floating-socical.vue");
   return _sfc_setup$2 ? _sfc_setup$2(props, ctx) : void 0;
 };
-const __nuxt_component_1 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["ssrRender", _sfc_ssrRender], ["__scopeId", "data-v-dedb0247"]]);
+const __nuxt_component_1 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["ssrRender", _sfc_ssrRender], ["__scopeId", "data-v-702a388d"]]);
 
 const _imports_0 = "" + __buildAssetsURL("logo-footer.DDc5LGYj.svg");
 
@@ -89,14 +89,14 @@ const _sfc_main$1 = {
       const _component_CommonFloatingSocical = __nuxt_component_1;
       _push(`<!--[-->`);
       if (__props.isFull) {
-        _push(`<div class="footer__top" data-v-f21cc4e3><div class="container" data-v-f21cc4e3><div class="row" data-v-f21cc4e3><div class="col-md-6" data-v-f21cc4e3>`);
+        _push(`<div class="footer__top" data-v-8c33344e><div class="container" data-v-8c33344e><div class="row" data-v-8c33344e><div class="col-md-6" data-v-8c33344e>`);
         _push(ssrRenderComponent(_component_nuxt_link, {
           to: "/",
           class: "footer__logo"
         }, {
           default: withCtx((_, _push2, _parent2, _scopeId) => {
             if (_push2) {
-              _push2(`<img class="mascot-border"${ssrRenderAttr("src", _imports_0)} alt="Logo" data-v-f21cc4e3${_scopeId}>`);
+              _push2(`<img class="mascot-border"${ssrRenderAttr("src", _imports_0)} alt="Logo" data-v-8c33344e${_scopeId}>`);
             } else {
               return [
                 createVNode("img", {
@@ -109,11 +109,11 @@ const _sfc_main$1 = {
           }),
           _: 1
         }, _parent));
-        _push(`<div class="footer__desc" data-v-f21cc4e3>A product by Viet Uc Food &amp; Co</div></div><div class="col-md-6" data-v-f21cc4e3><div class="footer__top-right" data-v-f21cc4e3><div class="item" data-v-f21cc4e3><div class="item__title" data-v-f21cc4e3>Address:</div><div data-v-f21cc4e3>107 Cù Lao St, Wrd 2, Phu Nhuan Dist, Ho Chi Minh City, Viet Nam</div></div><div class="box" data-v-f21cc4e3><div class="item" data-v-f21cc4e3><div class="item__title" data-v-f21cc4e3>Email:</div><a href="mailto:vietuc@gmail.com" data-v-f21cc4e3>vietuc@gmail.com</a></div><div class="item" data-v-f21cc4e3><div class="item__title" data-v-f21cc4e3>Hotline:</div><a href="tel:+1 514-525-2433" data-v-f21cc4e3>+1 514-525-2433</a></div><div class="item" data-v-f21cc4e3><div class="item__title" data-v-f21cc4e3>Follow us</div><div class="item__group" data-v-f21cc4e3><a href="#" data-v-f21cc4e3><i class="icon-instagram" data-v-f21cc4e3></i></a><a href="#" data-v-f21cc4e3><i class="icon-facebook" data-v-f21cc4e3></i></a><a href="#" data-v-f21cc4e3><i class="icon-tiktok" data-v-f21cc4e3></i></a></div></div></div></div></div></div></div></div>`);
+        _push(`<div class="footer__desc" data-v-8c33344e>A product by Viet Uc Food &amp; Co</div></div><div class="col-md-6" data-v-8c33344e><div class="footer__top-right" data-v-8c33344e><div class="item" data-v-8c33344e><div class="item__title" data-v-8c33344e>Address:</div><div data-v-8c33344e>107 Cù Lao St, Wrd 2, Phu Nhuan Dist, Ho Chi Minh City, Viet Nam</div></div><div class="box" data-v-8c33344e><div class="item" data-v-8c33344e><div class="item__title" data-v-8c33344e>Email:</div><a href="mailto:vietuc@gmail.com" data-v-8c33344e>vietuc@gmail.com</a></div><div class="item" data-v-8c33344e><div class="item__title" data-v-8c33344e>Hotline:</div><a href="tel:+1 514-525-2433" data-v-8c33344e>+1 514-525-2433</a></div><div class="item" data-v-8c33344e><div class="item__title" data-v-8c33344e>Follow us</div><div class="item__group" data-v-8c33344e><a href="#" data-v-8c33344e><i class="icon-instagram" data-v-8c33344e></i></a><a href="https://www.facebook.com/papaviet.vn" target="_blank" data-v-8c33344e><i class="icon-facebook" data-v-8c33344e></i></a><a href="#" data-v-8c33344e><i class="icon-tiktok" data-v-8c33344e></i></a></div></div></div></div></div></div></div></div>`);
       } else {
         _push(`<!---->`);
       }
-      _push(`<div class="footer coypy-right" data-v-f21cc4e3><p class="mb-0 py-3 text-center" data-v-f21cc4e3>Copyright © 2010-2024 <a href="https://mayday-creative.com" data-v-f21cc4e3>Mayday Creative</a>. All rights reserved</p></div>`);
+      _push(`<div class="footer coypy-right" data-v-8c33344e><p class="mb-0 py-3 text-center" data-v-8c33344e>Copyright © 2010-2024 <a href="https://mayday-creative.com" data-v-8c33344e>Mayday Creative</a>. All rights reserved</p></div>`);
       _push(ssrRenderComponent(_component_CommonFloatingSocical, null, null, _parent));
       _push(`<!--]-->`);
     };
@@ -125,7 +125,7 @@ _sfc_main$1.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/common/footer.vue");
   return _sfc_setup$1 ? _sfc_setup$1(props, ctx) : void 0;
 };
-const TheFooter = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-f21cc4e3"]]);
+const TheFooter = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-8c33344e"]]);
 
 const _sfc_main = {
   __name: "default",

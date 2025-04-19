@@ -12,14 +12,14 @@ import 'node:url';
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "aussiegr.co@gmail.com",
-    pass: "zxqpoyrpwrhhkezn"
+    user: "quangtuanhv@gmail.com",
+    pass: "dwfnkbmhtcardyfl"
   }
 });
 async function sendEmail(data) {
   const mailOptions = {
-    from: "aussiegr.co@gmail.com",
-    to: "aussiegr.co@gmail.com",
+    from: "quangtuanhv@gmail.com",
+    to: "khanhhuynh050895@gmail.com",
     subject: "New Contact Form Submission",
     html: `
       <h3>Contact Form Details:</h3>
@@ -40,7 +40,7 @@ async function sendEmail(data) {
 }
 async function sendThankYouEmail(data) {
   const mailOptions = {
-    from: "aussiegr.co@gmail.com",
+    from: "quangtuanhv@gmail.com",
     to: data.email,
     subject: "Thank You for Contacting Us",
     html: `

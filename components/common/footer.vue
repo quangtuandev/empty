@@ -29,7 +29,7 @@
                                     <a href="#">
                                         <i class="icon-instagram"></i>
                                     </a>
-                                    <a href="#">
+                                    <a href="https://www.facebook.com/papaviet.vn" target="_blank">
                                         <i class="icon-facebook"></i>
                                     </a>
                                     <a href="#">

@@ -16,7 +16,7 @@
                     <a class="fs-20" href="#">
                         <i class="icon-instagram"></i>
                     </a>
-                    <a class="fs-20" href="#">
+                    <a class="fs-20" href="https://www.facebook.com/papaviet.vn" target="_blank">
                         <i class="icon-facebook"></i>
                     </a>
                 </span>
