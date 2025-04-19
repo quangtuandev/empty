@@ -17,7 +17,7 @@ export default defineNuxtConfig({
         { name: 'twitter:description', content: 'Papa Việt - Authentic Vietnamese Restaurant' },
         { name: 'twitter:image', content: '/logo.svg' },
         { name: 'robots', content: 'index, follow' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' }
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -32,9 +32,6 @@ export default defineNuxtConfig({
         { crossorigin: 'anonymous', src: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js' }
       ]
     },
-  },
-  routeRules: {
-    '/': { redirect: '/contact' },
   },
   css: [
     '@/assets/scss/style.scss'

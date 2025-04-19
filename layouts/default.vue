@@ -6,7 +6,7 @@
                 <NuxtPage />
             </div>
         </div>
-        <the-footer />
+        <the-footer :isFull="$route.meta.footerType === 'full'" />
     </div>
 </template>
 <script setup>
@@ -15,7 +15,7 @@ import TheFooter from '~/components/common/footer.vue'
 </script>
 <style lang="scss" scoped>
 .layout {
-    min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

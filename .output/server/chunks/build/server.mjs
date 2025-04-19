@@ -1,126 +1,13 @@
-import { version, unref, inject, defineComponent, h, getCurrentInstance, computed, ref, provide, shallowReactive, watch, Suspense, nextTick, Fragment, Transition, hasInjectionContext, mergeProps, useSSRContext, createApp, effectScope, reactive, getCurrentScope, shallowRef, onErrorCaptured, onServerPrefetch, createVNode, resolveDynamicComponent, toRef, defineAsyncComponent, isReadonly, Text, withCtx, isRef, isShallow, isReactive, toRaw } from 'vue';
-import { $ as $fetch, m as defu, n as sanitizeStatusCode, o as createHooks, i as createError$1, t as toRouteMatcher, p as createRouter$1, q as getRequestHeaders, v as klona, w as parse$1, x as getRequestHeader, y as destr, z as isEqual$1, A as setCookie, B as getCookie, C as deleteCookie } from '../runtime.mjs';
-import { b as baseURL } from '../routes/renderer.mjs';
-import { getActiveHead, CapoPlugin } from 'unhead';
-import { defineHeadPlugin } from '@unhead/shared';
-import { useRoute as useRoute$1, RouterView, createMemoryHistory, createRouter, START_LOCATION } from 'vue-router';
-import { ssrRenderSuspense, ssrRenderComponent, ssrRenderVNode, ssrRenderAttrs } from 'vue/server-renderer';
-import 'node:http';
-import 'node:https';
-import 'node:fs';
-import 'node:path';
-import 'node:url';
-import 'vue-bundle-renderer/runtime';
-import 'devalue';
-import '@unhead/ssr';
+import { shallowReactive, reactive, effectScope, getCurrentScope, hasInjectionContext, getCurrentInstance, toRef, inject, shallowRef, isReadonly, isRef, isShallow, isReactive, toRaw, unref, ref, computed, defineComponent, h, Fragment, createVNode, Text, defineAsyncComponent, Suspense, nextTick, mergeProps, provide, watch, useSSRContext, withCtx, onErrorCaptured, onServerPrefetch, resolveDynamicComponent, createApp } from 'vue';
+import { i as createHooks, k as getContext, e as createError$1, t as toRouteMatcher, l as createRouter, m as defu, n as sanitizeStatusCode, o as executeAsync, p as getRequestHeaders, q as destr, v as klona, w as parse$1, x as getRequestHeader, y as isEqual$1, z as setCookie, A as getCookie, B as deleteCookie } from '../nitro/nitro.mjs';
+import { START_LOCATION, createMemoryHistory, createRouter as createRouter$1, useRoute as useRoute$1, RouterView } from 'vue-router';
+import { ssrRenderComponent, ssrRenderSuspense, ssrRenderVNode } from 'vue/server-renderer';
 
-function createContext$1(opts = {}) {
-  let currentInstance;
-  let isSingleton = false;
-  const checkConflict = (instance) => {
-    if (currentInstance && currentInstance !== instance) {
-      throw new Error("Context conflict");
-    }
-  };
-  let als;
-  if (opts.asyncContext) {
-    const _AsyncLocalStorage = opts.AsyncLocalStorage || globalThis.AsyncLocalStorage;
-    if (_AsyncLocalStorage) {
-      als = new _AsyncLocalStorage();
-    } else {
-      console.warn("[unctx] `AsyncLocalStorage` is not provided.");
-    }
-  }
-  const _getCurrentInstance = () => {
-    if (als && currentInstance === void 0) {
-      const instance = als.getStore();
-      if (instance !== void 0) {
-        return instance;
-      }
-    }
-    return currentInstance;
-  };
-  return {
-    use: () => {
-      const _instance = _getCurrentInstance();
-      if (_instance === void 0) {
-        throw new Error("Context is not available");
-      }
-      return _instance;
-    },
-    tryUse: () => {
-      return _getCurrentInstance();
-    },
-    set: (instance, replace) => {
-      if (!replace) {
-        checkConflict(instance);
-      }
-      currentInstance = instance;
-      isSingleton = true;
-    },
-    unset: () => {
-      currentInstance = void 0;
-      isSingleton = false;
-    },
-    call: (instance, callback) => {
-      checkConflict(instance);
-      currentInstance = instance;
-      try {
-        return als ? als.run(instance, callback) : callback();
-      } finally {
-        if (!isSingleton) {
-          currentInstance = void 0;
-        }
-      }
-    },
-    async callAsync(instance, callback) {
-      currentInstance = instance;
-      const onRestore = () => {
-        currentInstance = instance;
-      };
-      const onLeave = () => currentInstance === instance ? onRestore : void 0;
-      asyncHandlers$1.add(onLeave);
-      try {
-        const r = als ? als.run(instance, callback) : callback();
-        if (!isSingleton) {
-          currentInstance = void 0;
-        }
-        return await r;
-      } finally {
-        asyncHandlers$1.delete(onLeave);
-      }
-    }
-  };
-}
-function createNamespace$1(defaultOpts = {}) {
-  const contexts = {};
-  return {
-    get(key, opts = {}) {
-      if (!contexts[key]) {
-        contexts[key] = createContext$1({ ...defaultOpts, ...opts });
-      }
-      contexts[key];
-      return contexts[key];
-    }
-  };
-}
-const _globalThis = typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : typeof global !== "undefined" ? global : {};
-const globalKey$2 = "__unctx__";
-const defaultNamespace = _globalThis[globalKey$2] || (_globalThis[globalKey$2] = createNamespace$1());
-const getContext = (key, opts = {}) => defaultNamespace.get(key, opts);
-const asyncHandlersKey$1 = "__unctx_async_handlers__";
-const asyncHandlers$1 = _globalThis[asyncHandlersKey$1] || (_globalThis[asyncHandlersKey$1] = /* @__PURE__ */ new Set());
-
-if (!globalThis.$fetch) {
-  globalThis.$fetch = $fetch.create({
-    baseURL: baseURL()
-  });
-}
 const appLayoutTransition = false;
 const appPageTransition = false;
-const appKeepalive = false;
-const nuxtLinkDefaults = { "componentName": "NuxtLink", "prefetch": true, "prefetchOn": { "visibility": true } };
+const nuxtLinkDefaults = { "componentName": "NuxtLink" };
 const appId = "nuxt-app";
+
 function getNuxtAppCtx(id = appId) {
   return getContext(id, {
     asyncContext: false
@@ -137,7 +24,7 @@ function createNuxtApp(options) {
     globalName: "nuxt",
     versions: {
       get nuxt() {
-        return "3.13.2";
+        return "3.16.0";
       },
       get vue() {
         return nuxtApp.vueApp.version;
@@ -218,40 +105,40 @@ function createNuxtApp(options) {
   nuxtApp.provide("config", runtimeConfig);
   return nuxtApp;
 }
-function registerPluginHooks(nuxtApp, plugin2) {
-  if (plugin2.hooks) {
-    nuxtApp.hooks.addHooks(plugin2.hooks);
+function registerPluginHooks(nuxtApp, plugin) {
+  if (plugin.hooks) {
+    nuxtApp.hooks.addHooks(plugin.hooks);
   }
 }
-async function applyPlugin(nuxtApp, plugin2) {
-  if (typeof plugin2 === "function") {
-    const { provide: provide2 } = await nuxtApp.runWithContext(() => plugin2(nuxtApp)) || {};
-    if (provide2 && typeof provide2 === "object") {
-      for (const key in provide2) {
-        nuxtApp.provide(key, provide2[key]);
+async function applyPlugin(nuxtApp, plugin) {
+  if (typeof plugin === "function") {
+    const { provide } = await nuxtApp.runWithContext(() => plugin(nuxtApp)) || {};
+    if (provide && typeof provide === "object") {
+      for (const key in provide) {
+        nuxtApp.provide(key, provide[key]);
       }
     }
   }
 }
-async function applyPlugins(nuxtApp, plugins2) {
+async function applyPlugins(nuxtApp, plugins) {
   var _a, _b, _c, _d;
   const resolvedPlugins = [];
   const unresolvedPlugins = [];
   const parallels = [];
   const errors = [];
   let promiseDepth = 0;
-  async function executePlugin(plugin2) {
+  async function executePlugin(plugin) {
     var _a2;
-    const unresolvedPluginsForThisPlugin = ((_a2 = plugin2.dependsOn) == null ? void 0 : _a2.filter((name) => plugins2.some((p) => p._name === name) && !resolvedPlugins.includes(name))) ?? [];
+    const unresolvedPluginsForThisPlugin = ((_a2 = plugin.dependsOn) == null ? void 0 : _a2.filter((name) => plugins.some((p) => p._name === name) && !resolvedPlugins.includes(name))) ?? [];
     if (unresolvedPluginsForThisPlugin.length > 0) {
-      unresolvedPlugins.push([new Set(unresolvedPluginsForThisPlugin), plugin2]);
+      unresolvedPlugins.push([new Set(unresolvedPluginsForThisPlugin), plugin]);
     } else {
-      const promise = applyPlugin(nuxtApp, plugin2).then(async () => {
-        if (plugin2._name) {
-          resolvedPlugins.push(plugin2._name);
+      const promise = applyPlugin(nuxtApp, plugin).then(async () => {
+        if (plugin._name) {
+          resolvedPlugins.push(plugin._name);
           await Promise.all(unresolvedPlugins.map(async ([dependsOn, unexecutedPlugin]) => {
-            if (dependsOn.has(plugin2._name)) {
-              dependsOn.delete(plugin2._name);
+            if (dependsOn.has(plugin._name)) {
+              dependsOn.delete(plugin._name);
               if (dependsOn.size === 0) {
                 promiseDepth++;
                 await executePlugin(unexecutedPlugin);
@@ -260,24 +147,24 @@ async function applyPlugins(nuxtApp, plugins2) {
           }));
         }
       });
-      if (plugin2.parallel) {
+      if (plugin.parallel) {
         parallels.push(promise.catch((e) => errors.push(e)));
       } else {
         await promise;
       }
     }
   }
-  for (const plugin2 of plugins2) {
-    if (((_a = nuxtApp.ssrContext) == null ? void 0 : _a.islandContext) && ((_b = plugin2.env) == null ? void 0 : _b.islands) === false) {
+  for (const plugin of plugins) {
+    if (((_a = nuxtApp.ssrContext) == null ? void 0 : _a.islandContext) && ((_b = plugin.env) == null ? void 0 : _b.islands) === false) {
       continue;
     }
-    registerPluginHooks(nuxtApp, plugin2);
+    registerPluginHooks(nuxtApp, plugin);
   }
-  for (const plugin2 of plugins2) {
-    if (((_c = nuxtApp.ssrContext) == null ? void 0 : _c.islandContext) && ((_d = plugin2.env) == null ? void 0 : _d.islands) === false) {
+  for (const plugin of plugins) {
+    if (((_c = nuxtApp.ssrContext) == null ? void 0 : _c.islandContext) && ((_d = plugin.env) == null ? void 0 : _d.islands) === false) {
       continue;
     }
-    await executePlugin(plugin2);
+    await executePlugin(plugin);
   }
   await Promise.all(parallels);
   if (promiseDepth) {
@@ -290,14 +177,14 @@ async function applyPlugins(nuxtApp, plugins2) {
   }
 }
 // @__NO_SIDE_EFFECTS__
-function defineNuxtPlugin(plugin2) {
-  if (typeof plugin2 === "function") {
-    return plugin2;
+function defineNuxtPlugin(plugin) {
+  if (typeof plugin === "function") {
+    return plugin;
   }
-  const _name = plugin2._name || plugin2.name;
-  delete plugin2.name;
-  return Object.assign(plugin2.setup || (() => {
-  }), plugin2, { [NuxtPluginIndicator]: true, _name });
+  const _name = plugin._name || plugin.name;
+  delete plugin.name;
+  return Object.assign(plugin.setup || (() => {
+  }), plugin, { [NuxtPluginIndicator]: true, _name });
 }
 function callWithNuxt(nuxt, setup, args) {
   const fn = () => setup();
@@ -312,7 +199,7 @@ function tryUseNuxtApp(id) {
   if (hasInjectionContext()) {
     nuxtAppInstance = (_a = getCurrentInstance()) == null ? void 0 : _a.appContext.app.$nuxt;
   }
-  nuxtAppInstance = nuxtAppInstance || getNuxtAppCtx(id).tryUse();
+  nuxtAppInstance || (nuxtAppInstance = getNuxtAppCtx(id).tryUse());
   return nuxtAppInstance || null;
 }
 function useNuxtApp(id) {
@@ -331,6 +218,73 @@ function useRuntimeConfig(_event) {
 function defineGetter$1(obj, key, val) {
   Object.defineProperty(obj, key, { get: () => val });
 }
+
+const NUXT_ERROR_SIGNATURE = "__nuxt_error";
+const useError = () => toRef(useNuxtApp().payload, "error");
+const showError = (error) => {
+  const nuxtError = createError(error);
+  try {
+    const nuxtApp = useNuxtApp();
+    const error2 = useError();
+    if (false) ;
+    error2.value || (error2.value = nuxtError);
+  } catch {
+    throw nuxtError;
+  }
+  return nuxtError;
+};
+const isNuxtError = (error) => !!error && typeof error === "object" && NUXT_ERROR_SIGNATURE in error;
+const createError = (error) => {
+  const nuxtError = createError$1(error);
+  Object.defineProperty(nuxtError, NUXT_ERROR_SIGNATURE, {
+    value: true,
+    configurable: false,
+    writable: false
+  });
+  return nuxtError;
+};
+
+const unhead_k2P3m_ZDyjlr2mMYnoDPwavjsDN8hBlk9cFai0bbopU = defineNuxtPlugin({
+  name: "nuxt:head",
+  enforce: "pre",
+  setup(nuxtApp) {
+    const head = nuxtApp.ssrContext.head;
+    nuxtApp.vueApp.use(head);
+  }
+});
+
+const ROUTE_KEY_PARENTHESES_RE$1 = /(:\w+)\([^)]+\)/g;
+const ROUTE_KEY_SYMBOLS_RE$1 = /(:\w+)[?+*]/g;
+const ROUTE_KEY_NORMAL_RE$1 = /:\w+/g;
+const interpolatePath = (route, match) => {
+  return match.path.replace(ROUTE_KEY_PARENTHESES_RE$1, "$1").replace(ROUTE_KEY_SYMBOLS_RE$1, "$1").replace(ROUTE_KEY_NORMAL_RE$1, (r) => {
+    var _a;
+    return ((_a = route.params[r.slice(1)]) == null ? void 0 : _a.toString()) || "";
+  });
+};
+const generateRouteKey$1 = (routeProps, override) => {
+  const matchedRoute = routeProps.route.matched.find((m) => {
+    var _a;
+    return ((_a = m.components) == null ? void 0 : _a.default) === routeProps.Component.type;
+  });
+  const source = override ?? (matchedRoute == null ? void 0 : matchedRoute.meta.key) ?? (matchedRoute && interpolatePath(routeProps.route, matchedRoute));
+  return typeof source === "function" ? source(routeProps.route) : source;
+};
+function toArray(value) {
+  return Array.isArray(value) ? value : [value];
+}
+
+async function getRouteRules(arg) {
+  const path = typeof arg === "string" ? arg : arg.path;
+  {
+    useNuxtApp().ssrContext._preloadManifest = true;
+    const _routeRulesMatcher = toRouteMatcher(
+      createRouter({ routes: useRuntimeConfig().nitro.routeRules })
+    );
+    return defu({}, ..._routeRulesMatcher.matchAll(path).reverse());
+  }
+}
+
 const HASH_RE = /#/g;
 const AMPERSAND_RE = /&/g;
 const SLASH_RE = /\//g;
@@ -559,8 +513,10 @@ function stringifyParsedURL(parsed) {
   const proto = parsed.protocol || parsed[protocolRelative] ? (parsed.protocol || "") + "//" : "";
   return proto + auth + host + pathname + search + hash;
 }
+
 const LayoutMetaSymbol = Symbol("layout-meta");
 const PageRouteSymbol = Symbol("route");
+
 const useRouter = () => {
   var _a;
   return (_a = useNuxtApp()) == null ? void 0 : _a.$router;
@@ -577,13 +533,13 @@ function defineNuxtRouteMiddleware(middleware) {
 }
 const addRouteMiddleware = (name, middleware, options = {}) => {
   const nuxtApp = useNuxtApp();
-  const global2 = options.global || typeof name !== "string";
+  const global = options.global || false;
   const mw = middleware;
   if (!mw) {
     console.warn("[nuxt] No route middleware passed to `addRouteMiddleware`.", name);
     return;
   }
-  if (global2) {
+  if (global) {
     nuxtApp._middleware.global.push(mw);
   } else {
     nuxtApp._middleware.named[name] = mw;
@@ -599,10 +555,9 @@ const isProcessingMiddleware = () => {
   }
   return false;
 };
+const URL_QUOTE_RE = /"/g;
 const navigateTo = (to, options) => {
-  if (!to) {
-    to = "/";
-  }
+  to || (to = "/");
   const toPath = typeof to === "string" ? to : "path" in to ? resolveRouteObject(to) : useRouter().resolve(to).href;
   const isExternalHost = hasProtocol(toPath, { acceptRelative: true });
   const isExternal = (options == null ? void 0 : options.external) || isExternalHost;
@@ -621,10 +576,10 @@ const navigateTo = (to, options) => {
   {
     if (nuxtApp.ssrContext) {
       const fullPath = typeof to === "string" || isExternal ? toPath : router.resolve(to).fullPath || "/";
-      const location2 = isExternal ? toPath : joinURL((/* @__PURE__ */ useRuntimeConfig()).app.baseURL, fullPath);
+      const location2 = isExternal ? toPath : joinURL(useRuntimeConfig().app.baseURL, fullPath);
       const redirect = async function(response) {
         await nuxtApp.callHook("app:redirected");
-        const encodedLoc = location2.replace(/"/g, "%22");
+        const encodedLoc = location2.replace(URL_QUOTE_RE, "%22");
         const encodedHeader = encodeURL(location2, isExternalHost);
         nuxtApp.ssrContext._renderResponse = {
           statusCode: sanitizeStatusCode((options == null ? void 0 : options.redirectCode) || 302, 302),
@@ -674,265 +629,44 @@ function encodeURL(location2, isExternalHost = false) {
   }
   return url.toString();
 }
-const NUXT_ERROR_SIGNATURE = "__nuxt_error";
-const useError = () => toRef(useNuxtApp().payload, "error");
-const showError = (error) => {
-  const nuxtError = createError(error);
-  try {
-    const nuxtApp = useNuxtApp();
-    const error2 = useError();
-    if (false) ;
-    error2.value = error2.value || nuxtError;
-  } catch {
-    throw nuxtError;
-  }
-  return nuxtError;
+
+const __nuxt_page_meta = {
+  footerType: "full"
+  // Hoặc 'full'
 };
-const isNuxtError = (error) => !!error && typeof error === "object" && NUXT_ERROR_SIGNATURE in error;
-const createError = (error) => {
-  const nuxtError = createError$1(error);
-  Object.defineProperty(nuxtError, NUXT_ERROR_SIGNATURE, {
-    value: true,
-    configurable: false,
-    writable: false
-  });
-  return nuxtError;
-};
-version[0] === "3";
-function resolveUnref(r) {
-  return typeof r === "function" ? r() : unref(r);
-}
-function resolveUnrefHeadInput(ref2) {
-  if (ref2 instanceof Promise || ref2 instanceof Date || ref2 instanceof RegExp)
-    return ref2;
-  const root = resolveUnref(ref2);
-  if (!ref2 || !root)
-    return root;
-  if (Array.isArray(root))
-    return root.map((r) => resolveUnrefHeadInput(r));
-  if (typeof root === "object") {
-    const resolved = {};
-    for (const k in root) {
-      if (!Object.prototype.hasOwnProperty.call(root, k)) {
-        continue;
-      }
-      if (k === "titleTemplate" || k[0] === "o" && k[1] === "n") {
-        resolved[k] = unref(root[k]);
-        continue;
-      }
-      resolved[k] = resolveUnrefHeadInput(root[k]);
-    }
-    return resolved;
-  }
-  return root;
-}
-defineHeadPlugin({
-  hooks: {
-    "entries:resolve": (ctx) => {
-      for (const entry2 of ctx.entries)
-        entry2.resolvedInput = resolveUnrefHeadInput(entry2.input);
-    }
-  }
-});
-const headSymbol = "usehead";
-const _global = typeof globalThis !== "undefined" ? globalThis : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
-const globalKey$1 = "__unhead_injection_handler__";
-function setHeadInjectionHandler(handler) {
-  _global[globalKey$1] = handler;
-}
-function injectHead() {
-  if (globalKey$1 in _global) {
-    return _global[globalKey$1]();
-  }
-  const head = inject(headSymbol);
-  if (!head && "production" !== "production")
-    console.warn("Unhead is missing Vue context, falling back to shared context. This may have unexpected results.");
-  return head || getActiveHead();
-}
-[CapoPlugin({ track: true })];
-const unhead_KgADcZ0jPj = /* @__PURE__ */ defineNuxtPlugin({
-  name: "nuxt:head",
-  enforce: "pre",
-  setup(nuxtApp) {
-    const head = nuxtApp.ssrContext.head;
-    setHeadInjectionHandler(
-      // need a fresh instance of the nuxt app to avoid parallel requests interfering with each other
-      () => useNuxtApp().vueApp._context.provides.usehead
-    );
-    nuxtApp.vueApp.use(head);
-  }
-});
-function createContext(opts = {}) {
-  let currentInstance;
-  let isSingleton = false;
-  const checkConflict = (instance) => {
-    if (currentInstance && currentInstance !== instance) {
-      throw new Error("Context conflict");
-    }
-  };
-  let als;
-  if (opts.asyncContext) {
-    const _AsyncLocalStorage = opts.AsyncLocalStorage || globalThis.AsyncLocalStorage;
-    if (_AsyncLocalStorage) {
-      als = new _AsyncLocalStorage();
-    } else {
-      console.warn("[unctx] `AsyncLocalStorage` is not provided.");
-    }
-  }
-  const _getCurrentInstance = () => {
-    if (als && currentInstance === void 0) {
-      const instance = als.getStore();
-      if (instance !== void 0) {
-        return instance;
-      }
-    }
-    return currentInstance;
-  };
-  return {
-    use: () => {
-      const _instance = _getCurrentInstance();
-      if (_instance === void 0) {
-        throw new Error("Context is not available");
-      }
-      return _instance;
-    },
-    tryUse: () => {
-      return _getCurrentInstance();
-    },
-    set: (instance, replace) => {
-      if (!replace) {
-        checkConflict(instance);
-      }
-      currentInstance = instance;
-      isSingleton = true;
-    },
-    unset: () => {
-      currentInstance = void 0;
-      isSingleton = false;
-    },
-    call: (instance, callback) => {
-      checkConflict(instance);
-      currentInstance = instance;
-      try {
-        return als ? als.run(instance, callback) : callback();
-      } finally {
-        if (!isSingleton) {
-          currentInstance = void 0;
-        }
-      }
-    },
-    async callAsync(instance, callback) {
-      currentInstance = instance;
-      const onRestore = () => {
-        currentInstance = instance;
-      };
-      const onLeave = () => currentInstance === instance ? onRestore : void 0;
-      asyncHandlers.add(onLeave);
-      try {
-        const r = als ? als.run(instance, callback) : callback();
-        if (!isSingleton) {
-          currentInstance = void 0;
-        }
-        return await r;
-      } finally {
-        asyncHandlers.delete(onLeave);
-      }
-    }
-  };
-}
-function createNamespace(defaultOpts = {}) {
-  const contexts = {};
-  return {
-    get(key, opts = {}) {
-      if (!contexts[key]) {
-        contexts[key] = createContext({ ...defaultOpts, ...opts });
-      }
-      contexts[key];
-      return contexts[key];
-    }
-  };
-}
-const _globalThis$1 = typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : typeof global !== "undefined" ? global : {};
-const globalKey = "__unctx__";
-_globalThis$1[globalKey] || (_globalThis$1[globalKey] = createNamespace());
-const asyncHandlersKey = "__unctx_async_handlers__";
-const asyncHandlers = _globalThis$1[asyncHandlersKey] || (_globalThis$1[asyncHandlersKey] = /* @__PURE__ */ new Set());
-function executeAsync(function_) {
-  const restores = [];
-  for (const leaveHandler of asyncHandlers) {
-    const restore2 = leaveHandler();
-    if (restore2) {
-      restores.push(restore2);
-    }
-  }
-  const restore = () => {
-    for (const restore2 of restores) {
-      restore2();
-    }
-  };
-  let awaitable = function_();
-  if (awaitable && typeof awaitable === "object" && "catch" in awaitable) {
-    awaitable = awaitable.catch((error) => {
-      restore();
-      throw error;
-    });
-  }
-  return [awaitable, restore];
-}
-const interpolatePath = (route, match) => {
-  return match.path.replace(/(:\w+)\([^)]+\)/g, "$1").replace(/(:\w+)[?+*]/g, "$1").replace(/:\w+/g, (r) => {
-    var _a;
-    return ((_a = route.params[r.slice(1)]) == null ? void 0 : _a.toString()) || "";
-  });
-};
-const generateRouteKey$1 = (routeProps, override) => {
-  const matchedRoute = routeProps.route.matched.find((m) => {
-    var _a;
-    return ((_a = m.components) == null ? void 0 : _a.default) === routeProps.Component.type;
-  });
-  const source = override ?? (matchedRoute == null ? void 0 : matchedRoute.meta.key) ?? (matchedRoute && interpolatePath(routeProps.route, matchedRoute));
-  return typeof source === "function" ? source(routeProps.route) : source;
-};
-const wrapInKeepAlive = (props, children) => {
-  return { default: () => children };
-};
-function toArray(value) {
-  return Array.isArray(value) ? value : [value];
-}
-async function getRouteRules(url) {
-  {
-    const _routeRulesMatcher = toRouteMatcher(
-      createRouter$1({ routes: (/* @__PURE__ */ useRuntimeConfig()).nitro.routeRules })
-    );
-    return defu({}, ..._routeRulesMatcher.matchAll(url).reverse());
-  }
+
+function handleHotUpdate(_router, _generateRoutes) {
 }
 const _routes = [
   {
     name: "contact",
     path: "/contact",
-    component: () => import('./contact-BcuhfqwQ.mjs')
+    component: () => import('./contact.vue.mjs')
   },
   {
     name: "index",
     path: "/",
-    component: () => import('./index-DYf09NHL.mjs')
+    meta: __nuxt_page_meta || {},
+    component: () => import('./index.vue.mjs')
   },
   {
     name: "product",
     path: "/product",
-    component: () => import('./product-BACL6kwL.mjs')
+    component: () => import('./product.vue.mjs')
   }
 ];
-const _wrapIf = (component, props, slots) => {
-  props = props === true ? {} : props;
+
+const _wrapInTransition = (props, children) => {
   return { default: () => {
     var _a;
-    return props ? h(component, props, slots) : (_a = slots.default) == null ? void 0 : _a.call(slots);
+    return (_a = children.default) == null ? void 0 : _a.call(children);
   } };
 };
+const ROUTE_KEY_PARENTHESES_RE = /(:\w+)\([^)]+\)/g;
+const ROUTE_KEY_SYMBOLS_RE = /(:\w+)[?+*]/g;
+const ROUTE_KEY_NORMAL_RE = /:\w+/g;
 function generateRouteKey(route) {
-  const source = (route == null ? void 0 : route.meta.key) ?? route.path.replace(/(:\w+)\([^)]+\)/g, "$1").replace(/(:\w+)[?+*]/g, "$1").replace(/:\w+/g, (r) => {
+  const source = (route == null ? void 0 : route.meta.key) ?? route.path.replace(ROUTE_KEY_PARENTHESES_RE, "$1").replace(ROUTE_KEY_SYMBOLS_RE, "$1").replace(ROUTE_KEY_NORMAL_RE, (r) => {
     var _a;
     return ((_a = route.params[r.slice(1)]) == null ? void 0 : _a.toString()) || "";
   });
@@ -956,6 +690,7 @@ function isChangingPage(to, from) {
   }
   return true;
 }
+
 const routerOptions0 = {
   scrollBehavior(to, from, savedPosition) {
     var _a;
@@ -977,13 +712,13 @@ const routerOptions0 = {
     }
     const hasTransition = (route) => !!(route.meta.pageTransition ?? appPageTransition);
     const hookToWait = hasTransition(from) && hasTransition(to) ? "page:transition:finish" : "page:finish";
-    return new Promise((resolve2) => {
+    return new Promise((resolve) => {
       nuxtApp.hooks.hookOnce(hookToWait, async () => {
-        await new Promise((resolve22) => setTimeout(resolve22, 0));
+        await new Promise((resolve2) => setTimeout(resolve2, 0));
         if (to.hash) {
           position = { el: to.hash, top: _getHashElementScrollMarginTop(to.hash), behavior };
         }
-        resolve2(position);
+        resolve(position);
       });
     });
   }
@@ -998,6 +733,7 @@ function _getHashElementScrollMarginTop(selector) {
   }
   return 0;
 }
+
 const configRouterOptions = {
   hashMode: false,
   scrollBehaviorType: "auto"
@@ -1006,7 +742,8 @@ const routerOptions = {
   ...configRouterOptions,
   ...routerOptions0
 };
-const validate = /* @__PURE__ */ defineNuxtRouteMiddleware(async (to) => {
+
+const validate = defineNuxtRouteMiddleware(async (to) => {
   var _a;
   let __temp, __restore;
   if (!((_a = to.meta) == null ? void 0 : _a.validate)) {
@@ -1036,30 +773,30 @@ const validate = /* @__PURE__ */ defineNuxtRouteMiddleware(async (to) => {
     }
   });
 });
-const manifest_45route_45rule = /* @__PURE__ */ defineNuxtRouteMiddleware(async (to) => {
+
+const manifest_45route_45rule = defineNuxtRouteMiddleware(async (to) => {
   {
     return;
   }
 });
+
 const globalMiddleware = [
   validate,
   manifest_45route_45rule
 ];
 const namedMiddleware = {};
-const plugin = /* @__PURE__ */ defineNuxtPlugin({
+
+const plugin = defineNuxtPlugin({
   name: "nuxt:router",
   enforce: "pre",
   async setup(nuxtApp) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     let __temp, __restore;
-    let routerBase = (/* @__PURE__ */ useRuntimeConfig()).app.baseURL;
-    if (routerOptions.hashMode && !routerBase.includes("#")) {
-      routerBase += "#";
-    }
-    const history = ((_a = routerOptions.history) == null ? void 0 : _a.call(routerOptions, routerBase)) ?? createMemoryHistory(routerBase);
+    let routerBase = useRuntimeConfig().app.baseURL;
+    const history = ((_b = (_a = routerOptions).history) == null ? void 0 : _b.call(_a, routerBase)) ?? createMemoryHistory(routerBase);
     const routes = routerOptions.routes ? ([__temp, __restore] = executeAsync(() => routerOptions.routes(_routes)), __temp = await __temp, __restore(), __temp) ?? _routes : _routes;
     let startPosition;
-    const router = createRouter({
+    const router = createRouter$1({
       ...routerOptions,
       scrollBehavior: (to, from, savedPosition) => {
         if (from === START_LOCATION) {
@@ -1080,6 +817,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
       history,
       routes
     });
+    handleHotUpdate(router, routerOptions.routes ? routerOptions.routes : (routes2) => routes2);
     nuxtApp.vueApp.use(router);
     const previousRoute = shallowRef(router.currentRoute.value);
     router.afterEach((_to, from) => {
@@ -1095,8 +833,8 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     };
     nuxtApp.hook("page:finish", syncCurrentRoute);
     router.afterEach((to, from) => {
-      var _a2, _b2, _c2, _d;
-      if (((_b2 = (_a2 = to.matched[0]) == null ? void 0 : _a2.components) == null ? void 0 : _b2.default) === ((_d = (_c2 = from.matched[0]) == null ? void 0 : _c2.components) == null ? void 0 : _d.default)) {
+      var _a2, _b2, _c2, _d2;
+      if (((_b2 = (_a2 = to.matched[0]) == null ? void 0 : _a2.components) == null ? void 0 : _b2.default) === ((_d2 = (_c2 = from.matched[0]) == null ? void 0 : _c2.components) == null ? void 0 : _d2.default)) {
         syncCurrentRoute();
       }
     });
@@ -1108,12 +846,12 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
       });
     }
     nuxtApp._route = shallowReactive(route);
-    nuxtApp._middleware = nuxtApp._middleware || {
+    nuxtApp._middleware || (nuxtApp._middleware = {
       global: [],
       named: {}
-    };
+    });
     useError();
-    if (!((_b = nuxtApp.ssrContext) == null ? void 0 : _b.islandContext)) {
+    if (!((_c = nuxtApp.ssrContext) == null ? void 0 : _c.islandContext)) {
       router.afterEach(async (to, _from, failure) => {
         delete nuxtApp._processingMiddleware;
         if (failure) {
@@ -1122,16 +860,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
         if ((failure == null ? void 0 : failure.type) === 4) {
           return;
         }
-        if (to.matched.length === 0) {
-          await nuxtApp.runWithContext(() => showError(createError$1({
-            statusCode: 404,
-            fatal: false,
-            statusMessage: `Page not found: ${to.fullPath}`,
-            data: {
-              path: to.fullPath
-            }
-          })));
-        } else if (to.redirectedFrom && to.fullPath !== initialURL) {
+        if (to.redirectedFrom && to.fullPath !== initialURL) {
           await nuxtApp.runWithContext(() => navigateTo(to.fullPath || "/"));
         }
       });
@@ -1150,12 +879,12 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     }
     const resolvedInitialRoute = router.currentRoute.value;
     syncCurrentRoute();
-    if ((_c = nuxtApp.ssrContext) == null ? void 0 : _c.islandContext) {
+    if ((_d = nuxtApp.ssrContext) == null ? void 0 : _d.islandContext) {
       return { provide: { router } };
     }
     const initialLayout = nuxtApp.payload.state._layout;
     router.beforeEach(async (to, from) => {
-      var _a2, _b2;
+      var _a2, _b2, _c2;
       await nuxtApp.callHook("page:loading:start");
       to.meta = reactive(to.meta);
       if (nuxtApp.isHydrating && initialLayout && !isReadonly(to.meta.layout)) {
@@ -1169,12 +898,12 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
           if (!componentMiddleware) {
             continue;
           }
-          for (const entry2 of toArray(componentMiddleware)) {
-            middlewareEntries.add(entry2);
+          for (const entry of toArray(componentMiddleware)) {
+            middlewareEntries.add(entry);
           }
         }
         {
-          const routeRules = await nuxtApp.runWithContext(() => getRouteRules(to.path));
+          const routeRules = await nuxtApp.runWithContext(() => getRouteRules({ path: to.path }));
           if (routeRules.appMiddleware) {
             for (const key in routeRules.appMiddleware) {
               if (routeRules.appMiddleware[key]) {
@@ -1185,10 +914,10 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
             }
           }
         }
-        for (const entry2 of middlewareEntries) {
-          const middleware = typeof entry2 === "string" ? nuxtApp._middleware.named[entry2] || await ((_b2 = namedMiddleware[entry2]) == null ? void 0 : _b2.call(namedMiddleware).then((r) => r.default || r)) : entry2;
+        for (const entry of middlewareEntries) {
+          const middleware = typeof entry === "string" ? nuxtApp._middleware.named[entry] || await ((_c2 = (_b2 = namedMiddleware)[entry]) == null ? void 0 : _c2.call(_b2).then((r) => r.default || r)) : entry;
           if (!middleware) {
-            throw new Error(`Unknown route middleware: '${entry2}'.`);
+            throw new Error(`Unknown route middleware: '${entry}'.`);
           }
           const result = await nuxtApp.runWithContext(() => middleware(to, from));
           {
@@ -1214,6 +943,18 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
       delete nuxtApp._processingMiddleware;
       await nuxtApp.callHook("page:loading:end");
     });
+    router.afterEach(async (to, _from) => {
+      if (to.matched.length === 0) {
+        await nuxtApp.runWithContext(() => showError(createError$1({
+          statusCode: 404,
+          fatal: false,
+          statusMessage: `Page not found: ${to.fullPath}`,
+          data: {
+            path: to.fullPath
+          }
+        })));
+      }
+    });
     nuxtApp.hooks.hookOnce("app:created", async () => {
       try {
         if ("name" in resolvedInitialRoute) {
@@ -1231,11 +972,13 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     return { provide: { router } };
   }
 });
+
 function definePayloadReducer(name, reduce) {
   {
     useNuxtApp().ssrContext._payloadReducers[name] = reduce;
   }
 }
+
 const reducers = [
   ["NuxtError", (data) => isNuxtError(data) && data.toJSON()],
   ["EmptyShallowRef", (data) => isRef(data) && isShallow(data) && !data.value && (typeof data.value === "bigint" ? "0n" : JSON.stringify(data.value) || "_")],
@@ -1245,7 +988,7 @@ const reducers = [
   ["Ref", (data) => isRef(data) && data.value],
   ["Reactive", (data) => isReactive(data) && toRaw(data)]
 ];
-const revive_payload_server_eJ33V7gbc6 = /* @__PURE__ */ defineNuxtPlugin({
+const revive_payload_server_MVtmlZaQpj6ApFmshWfUWl5PehCebzaBf2NuRMiIbms = defineNuxtPlugin({
   name: "nuxt:revive-payload:server",
   setup() {
     for (const [reducer, fn] of reducers) {
@@ -1253,15 +996,16 @@ const revive_payload_server_eJ33V7gbc6 = /* @__PURE__ */ defineNuxtPlugin({
     }
   }
 });
-const components_plugin_KR1HBZs4kY = /* @__PURE__ */ defineNuxtPlugin({
+
+const components_plugin_z4hgvsiddfKkfXTP6M8M4zG5Cb7sGnDhcryKVM45Di4 = defineNuxtPlugin({
   name: "nuxt:global-components"
 });
+
 /*!
-  * shared v9.14.1
-  * (c) 2024 kazuya kawaguchi
+  * shared v9.14.3
+  * (c) 2025 kazuya kawaguchi
   * Released under the MIT License.
   */
-const inBrowser = false;
 const makeSymbol = (name, shareable = false) => !shareable ? Symbol(name) : Symbol.for(name);
 const generateFormatCacheKey = (locale, key, source) => friendlyJSONstringify({ l: locale, k: key, s: source });
 const friendlyJSONstringify = (json) => JSON.stringify(json).replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029").replace(/\u0027/g, "\\u0027");
@@ -1270,6 +1014,8 @@ const isDate = (val) => toTypeString(val) === "[object Date]";
 const isRegExp = (val) => toTypeString(val) === "[object RegExp]";
 const isEmptyObject = (val) => isPlainObject(val) && Object.keys(val).length === 0;
 const assign = Object.assign;
+const _create = Object.create;
+const create = (obj = null) => _create(obj);
 function escapeHtml(rawText) {
   return rawText.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
 }
@@ -1300,8 +1046,8 @@ const toDisplayString = (val) => {
 function join(items, separator = "") {
   return items.reduce((str, item, index) => index === 0 ? str + item : str + separator + item, "");
 }
-function incrementer(code2) {
-  let current = code2;
+function incrementer(code) {
+  let current = code;
   return () => ++current;
 }
 function warn(msg, err) {
@@ -1321,8 +1067,11 @@ function deepCopy(src, des) {
   while (stack.length) {
     const { src: src2, des: des2 } = stack.pop();
     Object.keys(src2).forEach((key) => {
+      if (key === "__proto__") {
+        return;
+      }
       if (isObject(src2[key]) && !isObject(des2[key])) {
-        des2[key] = Array.isArray(src2[key]) ? [] : {};
+        des2[key] = Array.isArray(src2[key]) ? [] : create();
       }
       if (isNotObjectOrIsArray(des2[key]) || isNotObjectOrIsArray(src2[key])) {
         des2[key] = src2[key];
@@ -1332,6 +1081,7 @@ function deepCopy(src, des) {
     });
   }
 }
+
 function isHTTPS(req, trustProxy = true) {
   const _xForwardedProto = trustProxy && req.headers ? req.headers["x-forwarded-proto"] : void 0;
   const protoCheck = typeof _xForwardedProto === "string" ? _xForwardedProto.includes("https") : void 0;
@@ -1348,6 +1098,7 @@ function isHTTPS(req, trustProxy = true) {
   }
   return false;
 }
+
 const localeCodes = [];
 const localeLoaders = {};
 const vueI18nConfigs = [];
@@ -1358,6 +1109,7 @@ const isSSG = false;
 const DEFAULT_DYNAMIC_PARAMS_KEY = "nuxtI18n";
 const DEFAULT_COOKIE_KEY = "i18n_redirected";
 const SWITCH_LOCALE_PATH_LINK_IDENTIFIER = "nuxt-i18n-slp";
+
 function getNormalizedLocales(locales) {
   locales = locales || [];
   const normalized = [];
@@ -1382,7 +1134,7 @@ function isVueI18n(target) {
 function getI18nTarget(i18n) {
   return isI18nInstance(i18n) ? i18n.global : i18n;
 }
-function getComposer$3(i18n) {
+function getComposer$1(i18n) {
   const target = getI18nTarget(i18n);
   if (isComposer(target)) return target;
   if (isVueI18n(target)) return target.__composer;
@@ -1458,25 +1210,26 @@ function compareBrowserLocale(a, b) {
 }
 const DefaultBrowerLocaleComparer = compareBrowserLocale;
 function findBrowserLocale(locales, browserLocales, { matcher = DefaultBrowserLocaleMatcher, comparer = DefaultBrowerLocaleComparer } = {}) {
-  const normalizedLocales2 = [];
+  const normalizedLocales = [];
   for (const l of locales) {
-    const { code: code2 } = l;
-    const language = l.language || code2;
-    normalizedLocales2.push({ code: code2, language });
+    const { code } = l;
+    const language = l.language || code;
+    normalizedLocales.push({ code, language });
   }
-  const matchedLocales = matcher(normalizedLocales2, browserLocales);
+  const matchedLocales = matcher(normalizedLocales, browserLocales);
   if (matchedLocales.length > 1) {
     matchedLocales.sort(comparer);
   }
   return matchedLocales.length ? matchedLocales[0].code : "";
 }
-function getLocalesRegex(localeCodes2) {
-  return new RegExp(`^/(${localeCodes2.join("|")})(?:/|$)`, "i");
+function getLocalesRegex(localeCodes) {
+  return new RegExp(`^/(${localeCodes.join("|")})(?:/|$)`, "i");
 }
+
 const cacheMessages = /* @__PURE__ */ new Map();
-async function loadVueI18nOptions(vueI18nConfigs2, nuxt) {
+async function loadVueI18nOptions(vueI18nConfigs, nuxt) {
   const vueI18nOptions = { messages: {} };
-  for (const configFile of vueI18nConfigs2) {
+  for (const configFile of vueI18nConfigs) {
     const { default: resolver } = await configFile();
     const resolved = isFunction(resolver) ? await nuxt.runWithContext(async () => await resolver()) : resolver;
     deepCopy(resolved, vueI18nOptions);
@@ -1499,14 +1252,14 @@ function makeFallbackLocaleCodes(fallback, locales) {
   }
   return fallbackLocales;
 }
-async function loadInitialMessages(messages, localeLoaders2, options) {
-  const { defaultLocale, initialLocale, localeCodes: localeCodes2, fallbackLocale, lazy } = options;
+async function loadInitialMessages(messages, localeLoaders, options) {
+  const { defaultLocale, initialLocale, localeCodes, fallbackLocale, lazy } = options;
   if (lazy && fallbackLocale) {
     const fallbackLocales = makeFallbackLocaleCodes(fallbackLocale, [defaultLocale, initialLocale]);
-    await Promise.all(fallbackLocales.map((locale) => loadAndSetLocaleMessages(locale, localeLoaders2, messages)));
+    await Promise.all(fallbackLocales.map((locale) => loadAndSetLocaleMessages(locale, localeLoaders, messages)));
   }
-  const locales = lazy ? [...(/* @__PURE__ */ new Set()).add(defaultLocale).add(initialLocale)] : localeCodes2;
-  await Promise.all(locales.map((locale) => loadAndSetLocaleMessages(locale, localeLoaders2, messages)));
+  const locales = lazy ? [...(/* @__PURE__ */ new Set()).add(defaultLocale).add(initialLocale)] : localeCodes;
+  await Promise.all(locales.map((locale) => loadAndSetLocaleMessages(locale, localeLoaders, messages)));
   return messages;
 }
 async function loadMessage(locale, { key, load }) {
@@ -1526,8 +1279,8 @@ async function loadMessage(locale, { key, load }) {
   }
   return message;
 }
-async function loadLocale(locale, localeLoaders2, setter) {
-  const loaders = localeLoaders2[locale];
+async function loadLocale(locale, localeLoaders, setter) {
+  const loaders = localeLoaders[locale];
   if (loaders == null) {
     console.warn("Could not find messages for locale code: " + locale);
     return;
@@ -1546,14 +1299,15 @@ async function loadLocale(locale, localeLoaders2, setter) {
   }
   setter(locale, targetMessage);
 }
-async function loadAndSetLocaleMessages(locale, localeLoaders2, messages) {
+async function loadAndSetLocaleMessages(locale, localeLoaders, messages) {
   const setter = (locale2, message) => {
     const base = messages[locale2] || {};
     deepCopy(message, base);
     messages[locale2] = base;
   };
-  await loadLocale(locale, localeLoaders2, setter);
+  await loadLocale(locale, localeLoaders, setter);
 }
+
 function split(str, index) {
   const result = [str.slice(0, index), str.slice(index)];
   return result;
@@ -1587,6 +1341,7 @@ function resolve({ router }, route, strategy, locale) {
   _resolvableRoute.path = targetPath;
   return router.resolve(_resolvableRoute);
 }
+
 const RESOLVED_PREFIXED = /* @__PURE__ */ new Set(["prefix_and_default", "prefix_except_default"]);
 function prefixable(options) {
   const { currentLocale, defaultLocale, strategy } = options;
@@ -1698,13 +1453,14 @@ function switchLocalePath(common, locale, _route) {
   const path = localePath(common, baseRoute, locale);
   return switchLocalePathIntercepter(path, locale);
 }
+
 function localeHead(common, {
   addDirAttribute = false,
   addSeoAttributes: seoAttributes = true,
   identifierAttribute: idAttribute = "hid"
 }) {
-  const { defaultDirection } = (/* @__PURE__ */ useRuntimeConfig()).public.i18n;
-  const i18n = getComposer$3(common.i18n);
+  const { defaultDirection } = useRuntimeConfig().public.i18n;
+  const i18n = getComposer$1(common.i18n);
   const metaObject = {
     htmlAttrs: {},
     link: [],
@@ -1715,9 +1471,7 @@ function localeHead(common, {
   }
   const locale = getLocale$1(common.i18n);
   const locales = getLocales(common.i18n);
-  const currentLocale = getNormalizedLocales(locales).find((l) => l.code === locale) || {
-    code: locale
-  };
+  const currentLocale = getNormalizedLocales(locales).find((l) => l.code === locale) || {};
   const currentLanguage = currentLocale.language;
   const currentDir = currentLocale.dir || defaultDirection;
   if (addDirAttribute) {
@@ -1741,12 +1495,12 @@ function localeHead(common, {
 }
 function getBaseUrl() {
   const nuxtApp = useNuxtApp();
-  const i18n = getComposer$3(nuxtApp.$i18n);
+  const i18n = getComposer$1(nuxtApp.$i18n);
   return joinURL(unref(i18n.baseUrl), nuxtApp.$config.app.baseURL);
 }
 function getHreflangLinks(common, locales, idAttribute) {
   const baseUrl = getBaseUrl();
-  const { defaultLocale, strategy } = (/* @__PURE__ */ useRuntimeConfig()).public.i18n;
+  const { defaultLocale, strategy } = useRuntimeConfig().public.i18n;
   const links = [];
   if (strategy === "no_prefix") return links;
   const localeMap = /* @__PURE__ */ new Map();
@@ -1763,23 +1517,23 @@ function getHreflangLinks(common, locales, idAttribute) {
     localeMap.set(localeLanguage, locale);
   }
   for (const [language, mapLocale] of localeMap.entries()) {
-    const localePath2 = switchLocalePath(common, mapLocale.code);
-    if (localePath2) {
+    const localePath = switchLocalePath(common, mapLocale.code);
+    if (localePath) {
       links.push({
         [idAttribute]: `i18n-alt-${language}`,
         rel: "alternate",
-        href: toAbsoluteUrl(localePath2, baseUrl),
+        href: toAbsoluteUrl(localePath, baseUrl),
         hreflang: language
       });
     }
   }
   if (defaultLocale) {
-    const localePath2 = switchLocalePath(common, defaultLocale);
-    if (localePath2) {
+    const localePath = switchLocalePath(common, defaultLocale);
+    if (localePath) {
       links.push({
         [idAttribute]: "i18n-xd",
         rel: "alternate",
-        href: toAbsoluteUrl(localePath2, baseUrl),
+        href: toAbsoluteUrl(localePath, baseUrl),
         hreflang: "x-default"
       });
     }
@@ -1845,8 +1599,9 @@ function toAbsoluteUrl(urlOrPath, baseUrl) {
   if (urlOrPath.match(/^https?:\/\//)) return urlOrPath;
   return joinURL(baseUrl, urlOrPath);
 }
+
 function createLocaleFromRouteGetter() {
-  const { routesNameSeparator, defaultLocaleRouteNameSuffix } = (/* @__PURE__ */ useRuntimeConfig()).public.i18n;
+  const { routesNameSeparator, defaultLocaleRouteNameSuffix } = useRuntimeConfig().public.i18n;
   const localesPattern = `(${localeCodes.join("|")})`;
   const defaultSuffixPattern = `(?:${routesNameSeparator}${defaultLocaleRouteNameSuffix})?`;
   const regexpName = new RegExp(`${routesNameSeparator}${localesPattern}${defaultSuffixPattern}$`, "i");
@@ -1875,6 +1630,7 @@ function createLocaleFromRouteGetter() {
   };
   return getLocaleFromRoute;
 }
+
 const useStateKeyPrefix = "$s";
 function useState(...args) {
   const autoKey = typeof args[args.length - 1] === "string" ? args.pop() : void 0;
@@ -1901,6 +1657,7 @@ function useState(...args) {
   }
   return state;
 }
+
 function setCookieLocale(i18n, locale) {
   return callVueI18nInterfaces(i18n, "setLocaleCookie", locale);
 }
@@ -1917,7 +1674,7 @@ function initCommonComposableOptions(i18n) {
   return {
     i18n: i18n ?? useNuxtApp().$i18n,
     router: useRouter(),
-    runtimeConfig: /* @__PURE__ */ useRuntimeConfig(),
+    runtimeConfig: useRuntimeConfig(),
     metaState: useState("nuxt-i18n-meta", () => ({}))
   };
 }
@@ -1926,7 +1683,7 @@ async function loadAndSetLocale(newLocale, i18n, runtimeI18n, initial = false) {
   const opts = runtimeDetectBrowserLanguage(runtimeI18n);
   const nuxtApp = useNuxtApp();
   const oldLocale = getLocale$1(i18n);
-  const localeCodes2 = getLocaleCodes(i18n);
+  const localeCodes = getLocaleCodes(i18n);
   function syncCookie(locale = oldLocale) {
     if (opts === false || !opts.useCookie) return;
     if (skipSettingLocaleOnNavigate) return;
@@ -1945,7 +1702,7 @@ async function loadAndSetLocale(newLocale, i18n, runtimeI18n, initial = false) {
     return false;
   }
   const localeOverride = await onBeforeLanguageSwitch(i18n, oldLocale, newLocale, initial, nuxtApp);
-  if (localeOverride && localeCodes2.includes(localeOverride)) {
+  if (localeOverride && localeCodes.includes(localeOverride)) {
     if (oldLocale === localeOverride) {
       syncCookie();
       return false;
@@ -2091,12 +1848,12 @@ function injectNuxtHelpers(nuxt, i18n) {
   defineGetter(nuxt, "$switchLocalePath", wrapComposable(switchLocalePath));
   defineGetter(nuxt, "$localeHead", wrapComposable(localeHead));
 }
-function extendPrefixable(runtimeConfig = /* @__PURE__ */ useRuntimeConfig()) {
+function extendPrefixable(runtimeConfig = useRuntimeConfig()) {
   return (opts) => {
     return DefaultPrefixable(opts) && !runtimeConfig.public.i18n.differentDomains;
   };
 }
-function extendSwitchLocalePathIntercepter(runtimeConfig = /* @__PURE__ */ useRuntimeConfig()) {
+function extendSwitchLocalePathIntercepter(runtimeConfig = useRuntimeConfig()) {
   return (path, locale) => {
     if (runtimeConfig.public.i18n.differentDomains) {
       const domain = getDomainFromLocale(locale);
@@ -2131,6 +1888,7 @@ function extendBaseUrl() {
     return baseUrl;
   };
 }
+
 function useRequestEvent(nuxtApp = useNuxtApp()) {
   var _a;
   return (_a = nuxtApp.ssrContext) == null ? void 0 : _a.event;
@@ -2151,6 +1909,7 @@ function useRequestHeaders(include) {
   }
   return headers;
 }
+
 const CookieDefaults = {
   path: "/",
   watch: true,
@@ -2209,6 +1968,7 @@ function writeServerCookie(event, name, value, opts = {}) {
     }
   }
 }
+
 function formatMessage(message) {
   return NUXT_I18N_MODULE_ID + " " + message;
 }
@@ -2295,7 +2055,7 @@ function detectBrowserLanguage(route, detectLocaleContext, locale = "") {
   if (!_detect) {
     return DefaultDetectBrowserLanguageFromResult;
   }
-  const { strategy } = (/* @__PURE__ */ useRuntimeConfig()).public.i18n;
+  const { strategy } = useRuntimeConfig().public.i18n;
   const { ssg, callType, firstAccess, localeCookie } = detectLocaleContext;
   if (!firstAccess) {
     return {
@@ -2405,7 +2165,7 @@ function getLocaleDomain(locales, strategy, route) {
 }
 function getDomainFromLocale(localeCode) {
   var _a, _b, _c, _d, _e, _f;
-  const runtimeConfig = /* @__PURE__ */ useRuntimeConfig();
+  const runtimeConfig = useRuntimeConfig();
   const nuxtApp = useNuxtApp();
   const host = getHost();
   const config = runtimeConfig.public.i18n;
@@ -2426,13 +2186,175 @@ function getDomainFromLocale(localeCode) {
   }
   console.warn(formatMessage("Could not find domain name for locale " + localeCode));
 }
-const runtimeDetectBrowserLanguage = (opts = (/* @__PURE__ */ useRuntimeConfig()).public.i18n) => {
+const runtimeDetectBrowserLanguage = (opts = useRuntimeConfig().public.i18n) => {
   if ((opts == null ? void 0 : opts.detectBrowserLanguage) === false) return false;
   return opts == null ? void 0 : opts.detectBrowserLanguage;
 };
+
+function useSwitchLocalePath() {
+  return wrapComposable(switchLocalePath);
+}
+
+const switch_locale_path_ssr_NflG9_QeVcJ1jVig0vCfxB_cZhpEMQ9U2ujRUiYbbVw = defineNuxtPlugin({
+  name: "i18n:plugin:switch-locale-path-ssr",
+  dependsOn: ["i18n:plugin"],
+  setup(nuxt) {
+    if (nuxt.$config.public.i18n.experimental.switchLocalePathLinkSSR !== true) return;
+    const switchLocalePath = useSwitchLocalePath();
+    const switchLocalePathLinkWrapperExpr = new RegExp(
+      [
+        `<!--${SWITCH_LOCALE_PATH_LINK_IDENTIFIER}-\\[(\\w+)\\]-->`,
+        `.+?`,
+        `<!--/${SWITCH_LOCALE_PATH_LINK_IDENTIFIER}-->`
+      ].join(""),
+      "g"
+    );
+    nuxt.hook("app:rendered", (ctx) => {
+      var _a;
+      if (((_a = ctx.renderResult) == null ? void 0 : _a.html) == null) return;
+      ctx.renderResult.html = ctx.renderResult.html.replaceAll(
+        switchLocalePathLinkWrapperExpr,
+        (match, p1) => match.replace(/href="([^"]+)"/, `href="${encodeURI(switchLocalePath(p1 ?? ""))}"`)
+      );
+    });
+  }
+});
+
+function extendI18n(i18n, {
+  locales = [],
+  localeCodes = [],
+  baseUrl = "",
+  hooks = {},
+  context = {}
+} = {}) {
+  const scope = effectScope();
+  const orgInstall = i18n.install;
+  i18n.install = (vue, ...options) => {
+    const pluginOptions = isPluginOptions(options[0]) ? assign({}, options[0]) : { inject: true };
+    if (pluginOptions.inject == null) {
+      pluginOptions.inject = true;
+    }
+    const orgComposerExtend = pluginOptions.__composerExtend;
+    pluginOptions.__composerExtend = (localComposer) => {
+      const globalComposer2 = getComposer$1(i18n);
+      localComposer.locales = computed(() => globalComposer2.locales.value);
+      localComposer.localeCodes = computed(() => globalComposer2.localeCodes.value);
+      localComposer.baseUrl = computed(() => globalComposer2.baseUrl.value);
+      let orgComposerDispose;
+      if (isFunction(orgComposerExtend)) {
+        orgComposerDispose = Reflect.apply(orgComposerExtend, pluginOptions, [localComposer]);
+      }
+      return () => {
+        orgComposerDispose && orgComposerDispose();
+      };
+    };
+    if (i18n.mode === "legacy") {
+      const orgVueI18nExtend = pluginOptions.__vueI18nExtend;
+      pluginOptions.__vueI18nExtend = (vueI18n) => {
+        extendVueI18n(vueI18n, hooks.onExtendVueI18n);
+        let orgVueI18nDispose;
+        if (isFunction(orgVueI18nExtend)) {
+          orgVueI18nDispose = Reflect.apply(orgVueI18nExtend, pluginOptions, [vueI18n]);
+        }
+        return () => {
+          orgVueI18nDispose && orgVueI18nDispose();
+        };
+      };
+    }
+    options[0] = pluginOptions;
+    Reflect.apply(orgInstall, i18n, [vue, ...options]);
+    const globalComposer = getComposer$1(i18n);
+    scope.run(() => {
+      extendComposer(globalComposer, { locales, localeCodes, baseUrl, hooks, context });
+      if (i18n.mode === "legacy" && isVueI18n(i18n.global)) {
+        extendVueI18n(i18n.global, hooks.onExtendVueI18n);
+      }
+    });
+    const app = vue;
+    const exported = i18n.mode === "composition" ? app.config.globalProperties.$i18n : null;
+    if (exported) {
+      extendExportedGlobal(exported, globalComposer, hooks.onExtendExportedGlobal);
+    }
+    if (pluginOptions.inject) {
+      const common = initCommonComposableOptions(i18n);
+      vue.mixin({
+        methods: {
+          getRouteBaseName: wrapComposable(getRouteBaseName, common),
+          resolveRoute: wrapComposable(resolveRoute, common),
+          localePath: wrapComposable(localePath, common),
+          localeRoute: wrapComposable(localeRoute, common),
+          localeLocation: wrapComposable(localeLocation, common),
+          switchLocalePath: wrapComposable(switchLocalePath, common),
+          localeHead: wrapComposable(localeHead, common)
+        }
+      });
+    }
+    if (app.unmount) {
+      const unmountApp = app.unmount;
+      app.unmount = () => {
+        scope.stop();
+        unmountApp();
+      };
+    }
+  };
+  return scope;
+}
+function extendComposer(composer, options) {
+  const { locales, localeCodes, baseUrl, context } = options;
+  const _locales = ref(locales);
+  const _localeCodes = ref(localeCodes);
+  const _baseUrl = ref("");
+  composer.locales = computed(() => _locales.value);
+  composer.localeCodes = computed(() => _localeCodes.value);
+  composer.baseUrl = computed(() => _baseUrl.value);
+  {
+    _baseUrl.value = resolveBaseUrl(baseUrl, context);
+  }
+  if (options.hooks && options.hooks.onExtendComposer) {
+    options.hooks.onExtendComposer(composer);
+  }
+}
+function extendPropertyDescriptors(composer, exported, hook) {
+  const properties = [
+    {
+      locales: {
+        get() {
+          return composer.locales.value;
+        }
+      },
+      localeCodes: {
+        get() {
+          return composer.localeCodes.value;
+        }
+      },
+      baseUrl: {
+        get() {
+          return composer.baseUrl.value;
+        }
+      }
+    }
+  ];
+  hook && properties.push(hook(composer));
+  for (const property of properties) {
+    for (const [key, descriptor] of Object.entries(property)) {
+      Object.defineProperty(exported, key, descriptor);
+    }
+  }
+}
+function extendExportedGlobal(exported, g, hook) {
+  extendPropertyDescriptors(g, exported, hook);
+}
+function extendVueI18n(vueI18n, hook) {
+  const c = getComposer$1(vueI18n);
+  extendPropertyDescriptors(c, vueI18n, hook);
+}
+function isPluginOptions(options) {
+  return isObject(options) && ("inject" in options || "__composerExtend" in options || "__vueI18nExtend" in options);
+}
+
 /*!
-  * message-compiler v9.14.1
-  * (c) 2024 kazuya kawaguchi
+  * message-compiler v9.14.3
+  * (c) 2025 kazuya kawaguchi
   * Released under the MIT License.
   */
 function createPosition(line, column, offset) {
@@ -2446,9 +2368,9 @@ const CompileWarnCodes = {
   USE_MODULO_SYNTAX: 1,
   __EXTEND_POINT__: 2
 };
-function createCompileWarn(code2, loc, ...args) {
-  const msg = code2;
-  const message = { message: String(msg), code: code2 };
+function createCompileWarn(code, loc, ...args) {
+  const msg = code;
+  const message = { message: String(msg), code };
   if (loc) {
     message.location = loc;
   }
@@ -2471,20 +2393,16 @@ const CompileErrorCodes = {
   UNEXPECTED_EMPTY_LINKED_MODIFIER: 12,
   UNEXPECTED_EMPTY_LINKED_KEY: 13,
   UNEXPECTED_LEXICAL_ANALYSIS: 14,
-  // generator error codes
-  UNHANDLED_CODEGEN_NODE_TYPE: 15,
-  // minifier error codes
-  UNHANDLED_MINIFIER_NODE_TYPE: 16,
   // Special value for higher-order compilers to pick up the last code
   // to avoid collision of error codes. This should always be kept as the last
   // item.
   __EXTEND_POINT__: 17
 };
-function createCompileError(code2, loc, options = {}) {
+function createCompileError(code, loc, options = {}) {
   const { domain, messages, args } = options;
-  const msg = code2;
+  const msg = code;
   const error = new SyntaxError(String(msg));
-  error.code = code2;
+  error.code = code;
   if (loc) {
     error.location = loc;
   }
@@ -2594,13 +2512,13 @@ function createTokenizer(source, options = {}) {
   };
   const context = () => _context;
   const { onError } = options;
-  function emitError(code2, pos, offset, ...args) {
+  function emitError(code, pos, offset, ...args) {
     const ctx = context();
     pos.column += offset;
     pos.offset += offset;
     if (onError) {
       const loc = location ? createLocation(ctx.startLoc, pos) : null;
-      const err = createCompileError(code2, loc, {
+      const err = createCompileError(code, loc, {
         domain: ERROR_DOMAIN$3,
         args
       });
@@ -2909,7 +2827,7 @@ function createTokenizer(source, options = {}) {
     }
     return value;
   }
-  function isLiteral2(ch) {
+  function isLiteral(ch) {
     return ch !== LITERAL_DELIMITER && ch !== CHAR_LF;
   }
   function readLiteral(scnr) {
@@ -2917,7 +2835,7 @@ function createTokenizer(source, options = {}) {
     eat(scnr, `'`);
     let ch = "";
     let literal = "";
-    while (ch = takeChar(scnr, isLiteral2)) {
+    while (ch = takeChar(scnr, isLiteral)) {
       if (ch === "\\") {
         literal += readEscapeSequence(scnr);
       } else {
@@ -3242,6 +3160,7 @@ function fromEscapeSequence(match, codePoint4, codePoint6) {
   switch (match) {
     case `\\\\`:
       return `\\`;
+    // eslint-disable-next-line no-useless-escape
     case `\\'`:
       return `'`;
     default: {
@@ -3256,26 +3175,26 @@ function fromEscapeSequence(match, codePoint4, codePoint6) {
 function createParser(options = {}) {
   const location = options.location !== false;
   const { onError, onWarn } = options;
-  function emitError(tokenzer, code2, start, offset, ...args) {
+  function emitError(tokenzer, code, start, offset, ...args) {
     const end = tokenzer.currentPosition();
     end.offset += offset;
     end.column += offset;
     if (onError) {
       const loc = location ? createLocation(start, end) : null;
-      const err = createCompileError(code2, loc, {
+      const err = createCompileError(code, loc, {
         domain: ERROR_DOMAIN$2,
         args
       });
       onError(err);
     }
   }
-  function emitWarn(tokenzer, code2, start, offset, ...args) {
+  function emitWarn(tokenzer, code, start, offset, ...args) {
     const end = tokenzer.currentPosition();
     end.offset += offset;
     end.column += offset;
     if (onWarn) {
       const loc = location ? createLocation(start, end) : null;
-      onWarn(createCompileWarn(code2, loc, args));
+      onWarn(createCompileWarn(code, loc, args));
     }
   }
   function startNode(type, offset, loc) {
@@ -3507,7 +3426,7 @@ function createParser(options = {}) {
       return parsePlural(tokenizer, offset, startLoc, msgNode);
     }
   }
-  function parse2(source) {
+  function parse(source) {
     const tokenizer = createTokenizer(source, assign({}, options));
     const context = tokenizer.context();
     const node = startNode(0, context.offset, context.startLoc);
@@ -3524,7 +3443,7 @@ function createParser(options = {}) {
     endNode(node, tokenizer.currentOffset(), tokenizer.currentPosition());
     return node;
   }
-  return { parse: parse2 };
+  return { parse };
 }
 function getTokenCaption(token) {
   if (token.type === 14) {
@@ -3719,7 +3638,7 @@ function minify(node) {
   delete node.type;
 }
 function createCodeGenerator(ast, options) {
-  const { sourceMap, filename, breakLineCode, needIndent: _needIndent } = options;
+  const { filename, breakLineCode, needIndent: _needIndent } = options;
   const location = options.location !== false;
   const _context = {
     filename,
@@ -3736,8 +3655,8 @@ function createCodeGenerator(ast, options) {
     _context.source = ast.loc.source;
   }
   const context = () => _context;
-  function push(code2, node) {
-    _context.code += code2;
+  function push(code, node) {
+    _context.code += code;
   }
   function _newline(n, withBreakLine = true) {
     const _breakLineCode = withBreakLine ? breakLineCode : "";
@@ -3877,14 +3796,12 @@ function generateNode(generator, node) {
 const generate = (ast, options = {}) => {
   const mode = isString(options.mode) ? options.mode : "normal";
   const filename = isString(options.filename) ? options.filename : "message.intl";
-  const sourceMap = !!options.sourceMap;
+  !!options.sourceMap;
   const breakLineCode = options.breakLineCode != null ? options.breakLineCode : mode === "arrow" ? ";" : "\n";
   const needIndent = options.needIndent ? options.needIndent : mode !== "arrow";
   const helpers = ast.helpers || [];
   const generator = createCodeGenerator(ast, {
-    mode,
     filename,
-    sourceMap,
     breakLineCode,
     needIndent
   });
@@ -3899,10 +3816,10 @@ const generate = (ast, options = {}) => {
   generator.deindent(needIndent);
   generator.push(`}`);
   delete ast.helpers;
-  const { code: code2, map } = generator.context();
+  const { code, map } = generator.context();
   return {
     ast,
-    code: code2,
+    code,
     map: map ? map.toJSON() : void 0
     // eslint-disable-line @typescript-eslint/no-explicit-any
   };
@@ -3923,6 +3840,7 @@ function baseCompile$1(source, options = {}) {
     return { ast, code: "" };
   }
 }
+
 const pathStateMachine = [];
 pathStateMachine[
   0
@@ -4187,21 +4105,33 @@ function getPathCharType(ch) {
   const code2 = ch.charCodeAt(0);
   switch (code2) {
     case 91:
+    // [
     case 93:
+    // ]
     case 46:
+    // .
     case 34:
+    // "
     case 39:
       return ch;
     case 95:
+    // _
     case 36:
+    // $
     case 45:
       return "i";
     case 9:
+    // Tab (HT)
     case 10:
+    // Newline (LF)
     case 13:
+    // Return (CR)
     case 160:
+    // No-break space (NBSP)
     case 65279:
+    // Byte Order Mark (BOM)
     case 8232:
+    // Line Separator (LS)
     case 8233:
       return "w";
   }
@@ -4329,7 +4259,7 @@ const cache = /* @__PURE__ */ new Map();
 function resolveWithKeyValue(obj, path) {
   return isObject(obj) ? obj[path] : null;
 }
-function resolveValue(obj, path) {
+function resolveValue$1(obj, path) {
   if (!isObject(obj)) {
     return null;
   }
@@ -4393,7 +4323,7 @@ function createMessageContext(options = {}) {
   };
   const _list = options.list || [];
   const list = (index) => _list[index];
-  const _named = options.named || {};
+  const _named = options.named || create();
   isNumber(options.pluralIndex) && normalizeNamed(pluralIndex, _named);
   const named = (key) => _named[key];
   function message(key) {
@@ -4466,14 +4396,13 @@ function createMessageContext(options = {}) {
     [
       "values"
       /* HelperNameMap.VALUES */
-    ]: assign({}, _list, _named)
+    ]: assign(create(), _list, _named)
   };
   return ctx;
 }
 const code$1$1 = CompileWarnCodes.__EXTEND_POINT__;
 const inc$1$1 = incrementer(code$1$1);
 const CoreWarnCodes = {
-  NOT_FOUND_KEY: code$1$1,
   // 2
   FALLBACK_TO_TRANSLATE: inc$1$1(),
   // 3
@@ -4525,11 +4454,11 @@ function resolveLocale(locale) {
       if (locale.resolvedOnce && _resolveLocale != null) {
         return _resolveLocale;
       } else if (locale.constructor.name === "Function") {
-        const resolve2 = locale();
-        if (isPromise(resolve2)) {
+        const resolve = locale();
+        if (isPromise(resolve)) {
           throw createCoreError(CoreErrorCodes.NOT_SUPPORT_LOCALE_PROMISE_VALUE);
         }
-        return _resolveLocale = resolve2;
+        return _resolveLocale = resolve;
       } else {
         throw createCoreError(CoreErrorCodes.NOT_SUPPORT_LOCALE_ASYNC_FUNCTION);
       }
@@ -4601,7 +4530,7 @@ function appendItemToChain(chain, target, blocks) {
   }
   return follow;
 }
-const VERSION$1 = "9.14.1";
+const VERSION$1 = "9.14.3";
 const NOT_REOSLVED = -1;
 const DEFAULT_LOCALE = "en-US";
 const MISSING_RESOLVE_VALUE = "";
@@ -4641,15 +4570,15 @@ const getFallbackContext = () => _fallbackContext;
 let _cid = 0;
 function createCoreContext(options = {}) {
   const onWarn = isFunction(options.onWarn) ? options.onWarn : warn;
-  const version2 = isString(options.version) ? options.version : VERSION$1;
+  const version = isString(options.version) ? options.version : VERSION$1;
   const locale = isString(options.locale) || isFunction(options.locale) ? options.locale : DEFAULT_LOCALE;
   const _locale = isFunction(locale) ? DEFAULT_LOCALE : locale;
   const fallbackLocale = isArray(options.fallbackLocale) || isPlainObject(options.fallbackLocale) || isString(options.fallbackLocale) || options.fallbackLocale === false ? options.fallbackLocale : _locale;
-  const messages = isPlainObject(options.messages) ? options.messages : { [_locale]: {} };
-  const datetimeFormats = isPlainObject(options.datetimeFormats) ? options.datetimeFormats : { [_locale]: {} };
-  const numberFormats = isPlainObject(options.numberFormats) ? options.numberFormats : { [_locale]: {} };
-  const modifiers = assign({}, options.modifiers || {}, getDefaultLinkedModifiers());
-  const pluralRules = options.pluralRules || {};
+  const messages = isPlainObject(options.messages) ? options.messages : createResources(_locale);
+  const datetimeFormats = isPlainObject(options.datetimeFormats) ? options.datetimeFormats : createResources(_locale);
+  const numberFormats = isPlainObject(options.numberFormats) ? options.numberFormats : createResources(_locale);
+  const modifiers = assign(create(), options.modifiers, getDefaultLinkedModifiers());
+  const pluralRules = options.pluralRules || create();
   const missing = isFunction(options.missing) ? options.missing : null;
   const missingWarn = isBoolean(options.missingWarn) || isRegExp(options.missingWarn) ? options.missingWarn : true;
   const fallbackWarn = isBoolean(options.fallbackWarn) || isRegExp(options.fallbackWarn) ? options.fallbackWarn : true;
@@ -4669,7 +4598,7 @@ function createCoreContext(options = {}) {
   const __meta = isObject(internalOptions.__meta) ? internalOptions.__meta : {};
   _cid++;
   const context = {
-    version: version2,
+    version,
     cid: _cid,
     locale,
     fallbackLocale,
@@ -4700,6 +4629,7 @@ function createCoreContext(options = {}) {
   }
   return context;
 }
+const createResources = (locale) => ({ [locale]: create() });
 function handleMissing(context, key, locale, missingWarn, type) {
   const { missing, onWarn } = context;
   if (missing !== null) {
@@ -4736,10 +4666,17 @@ function format(ast) {
   return msg;
 }
 function formatParts(ctx, ast) {
-  const body = ast.b || ast.body;
-  if ((body.t || body.type) === 1) {
+  const body = resolveBody(ast);
+  if (body == null) {
+    throw createUnhandleNodeError(
+      0
+      /* NodeTypes.Resource */
+    );
+  }
+  const type = resolveType(body);
+  if (type === 1) {
     const plural = body;
-    const cases = plural.c || plural.cases;
+    const cases = resolveCases(plural);
     return ctx.plural(cases.reduce((messages, c) => [
       ...messages,
       formatMessageParts(ctx, c)
@@ -4748,54 +4685,122 @@ function formatParts(ctx, ast) {
     return formatMessageParts(ctx, body);
   }
 }
+const PROPS_BODY = ["b", "body"];
+function resolveBody(node) {
+  return resolveProps(node, PROPS_BODY);
+}
+const PROPS_CASES = ["c", "cases"];
+function resolveCases(node) {
+  return resolveProps(node, PROPS_CASES, []);
+}
 function formatMessageParts(ctx, node) {
-  const _static = node.s || node.static;
-  if (_static) {
-    return ctx.type === "text" ? _static : ctx.normalize([_static]);
+  const static_ = resolveStatic(node);
+  if (static_ != null) {
+    return ctx.type === "text" ? static_ : ctx.normalize([static_]);
   } else {
-    const messages = (node.i || node.items).reduce((acm, c) => [...acm, formatMessagePart(ctx, c)], []);
+    const messages = resolveItems(node).reduce((acm, c) => [...acm, formatMessagePart(ctx, c)], []);
     return ctx.normalize(messages);
   }
 }
+const PROPS_STATIC = ["s", "static"];
+function resolveStatic(node) {
+  return resolveProps(node, PROPS_STATIC);
+}
+const PROPS_ITEMS = ["i", "items"];
+function resolveItems(node) {
+  return resolveProps(node, PROPS_ITEMS, []);
+}
 function formatMessagePart(ctx, node) {
-  const type = node.t || node.type;
+  const type = resolveType(node);
   switch (type) {
     case 3: {
-      const text = node;
-      return text.v || text.value;
+      return resolveValue(node, type);
     }
     case 9: {
-      const literal = node;
-      return literal.v || literal.value;
+      return resolveValue(node, type);
     }
     case 4: {
       const named = node;
-      return ctx.interpolate(ctx.named(named.k || named.key));
+      if (hasOwn(named, "k") && named.k) {
+        return ctx.interpolate(ctx.named(named.k));
+      }
+      if (hasOwn(named, "key") && named.key) {
+        return ctx.interpolate(ctx.named(named.key));
+      }
+      throw createUnhandleNodeError(type);
     }
     case 5: {
       const list = node;
-      return ctx.interpolate(ctx.list(list.i != null ? list.i : list.index));
+      if (hasOwn(list, "i") && isNumber(list.i)) {
+        return ctx.interpolate(ctx.list(list.i));
+      }
+      if (hasOwn(list, "index") && isNumber(list.index)) {
+        return ctx.interpolate(ctx.list(list.index));
+      }
+      throw createUnhandleNodeError(type);
     }
     case 6: {
       const linked = node;
-      const modifier = linked.m || linked.modifier;
-      return ctx.linked(formatMessagePart(ctx, linked.k || linked.key), modifier ? formatMessagePart(ctx, modifier) : void 0, ctx.type);
+      const modifier = resolveLinkedModifier(linked);
+      const key = resolveLinkedKey(linked);
+      return ctx.linked(formatMessagePart(ctx, key), modifier ? formatMessagePart(ctx, modifier) : void 0, ctx.type);
     }
     case 7: {
-      const linkedKey = node;
-      return linkedKey.v || linkedKey.value;
+      return resolveValue(node, type);
     }
     case 8: {
-      const linkedModifier = node;
-      return linkedModifier.v || linkedModifier.value;
+      return resolveValue(node, type);
     }
     default:
-      throw new Error(`unhandled node type on format message part: ${type}`);
+      throw new Error(`unhandled node on format message part: ${type}`);
   }
 }
+const PROPS_TYPE = ["t", "type"];
+function resolveType(node) {
+  return resolveProps(node, PROPS_TYPE);
+}
+const PROPS_VALUE = ["v", "value"];
+function resolveValue(node, type) {
+  const resolved = resolveProps(node, PROPS_VALUE);
+  if (resolved) {
+    return resolved;
+  } else {
+    throw createUnhandleNodeError(type);
+  }
+}
+const PROPS_MODIFIER = ["m", "modifier"];
+function resolveLinkedModifier(node) {
+  return resolveProps(node, PROPS_MODIFIER);
+}
+const PROPS_KEY = ["k", "key"];
+function resolveLinkedKey(node) {
+  const resolved = resolveProps(node, PROPS_KEY);
+  if (resolved) {
+    return resolved;
+  } else {
+    throw createUnhandleNodeError(
+      6
+      /* NodeTypes.Linked */
+    );
+  }
+}
+function resolveProps(node, props, defaultValue) {
+  for (let i = 0; i < props.length; i++) {
+    const prop = props[i];
+    if (hasOwn(node, prop) && node[prop] != null) {
+      return node[prop];
+    }
+  }
+  return defaultValue;
+}
+function createUnhandleNodeError(type) {
+  return new Error(`unhandled node type: ${type}`);
+}
 const defaultOnCacheKey = (message) => message;
-let compileCache = /* @__PURE__ */ Object.create(null);
-const isMessageAST = (val) => isObject(val) && (val.t === 0 || val.type === 0) && ("b" in val || "body" in val);
+let compileCache = create();
+function isMessageAST(val) {
+  return isObject(val) && resolveType(val) === 0 && (hasOwn(val, "b") || hasOwn(val, "body"));
+}
 function baseCompile(message, options = {}) {
   let detectError = false;
   const onError = options.onError || defaultOnError;
@@ -4850,7 +4855,7 @@ function translate(context, ...args) {
   let [formatScope, targetLocale, message] = !resolvedMessage ? resolveMessageFormat(context, key, locale, fallbackLocale, fallbackWarn, missingWarn) : [
     key,
     locale,
-    messages[locale] || {}
+    messages[locale] || create()
   ];
   let format2 = formatScope;
   let cacheBaseKey = key;
@@ -4891,13 +4896,13 @@ function escapeParams(options) {
 function resolveMessageFormat(context, key, locale, fallbackLocale, fallbackWarn, missingWarn) {
   const { messages, onWarn, messageResolver: resolveValue2, localeFallbacker } = context;
   const locales = localeFallbacker(context, fallbackLocale, locale);
-  let message = {};
+  let message = create();
   let targetLocale;
   let format2 = null;
   const type = "translate";
   for (let i = 0; i < locales.length; i++) {
     targetLocale = locales[i];
-    message = messages[targetLocale] || {};
+    message = messages[targetLocale] || create();
     if ((format2 = resolveValue2(message, key)) === null) {
       format2 = message[key];
     }
@@ -4946,7 +4951,7 @@ function evaluateMessage(context, msg, msgCtx) {
 }
 function parseTranslateArgs(...args) {
   const [arg1, arg2, arg3] = args;
-  const options = {};
+  const options = create();
   if (!isString(arg1) && !isNumber(arg1) && !isMessageFunction(arg1) && !isMessageAST(arg1)) {
     throw createCoreError(CoreErrorCodes.INVALID_ARGUMENT);
   }
@@ -5091,8 +5096,8 @@ const DATETIME_FORMAT_OPTIONS_KEYS = [
 ];
 function parseDateTimeArgs(...args) {
   const [arg1, arg2, arg3, arg4] = args;
-  const options = {};
-  let overrides = {};
+  const options = create();
+  let overrides = create();
   let value;
   if (isString(arg1)) {
     const matches = arg1.match(/(\d{4}-\d{2}-\d{2})(T|\s)?(.*)/);
@@ -5214,8 +5219,8 @@ const NUMBER_FORMAT_OPTIONS_KEYS = [
 ];
 function parseNumberArgs(...args) {
   const [arg1, arg2, arg3, arg4] = args;
-  const options = {};
-  let overrides = {};
+  const options = create();
+  let overrides = create();
   if (!isNumber(arg1)) {
     throw createCoreError(CoreErrorCodes.INVALID_ARGUMENT);
   }
@@ -5251,16 +5256,16 @@ function clearNumberFormat(ctx, locale, format2) {
     context.__numberFormatters.delete(id);
   }
 }
+
 /*!
-  * vue-i18n v9.14.1
-  * (c) 2024 kazuya kawaguchi
+  * vue-i18n v9.14.3
+  * (c) 2025 kazuya kawaguchi
   * Released under the MIT License.
   */
-const VERSION = "9.14.1";
+const VERSION = "9.14.3";
 const code$1 = CoreWarnCodes.__EXTEND_POINT__;
 const inc$1 = incrementer(code$1);
 ({
-  FALLBACK_TO_ROOT: code$1,
   // 9
   NOT_SUPPORTED_PRESERVE: inc$1(),
   // 10
@@ -5353,8 +5358,11 @@ function handleFlatJson(obj) {
       let currentObj = obj;
       let hasStringValue = false;
       for (let i = 0; i < lastIndex; i++) {
+        if (subKeys[i] === "__proto__") {
+          throw new Error(`unsafe key: ${subKeys[i]}`);
+        }
         if (!(subKeys[i] in currentObj)) {
-          currentObj[subKeys[i]] = {};
+          currentObj[subKeys[i]] = create();
         }
         if (!isObject(currentObj[subKeys[i]])) {
           hasStringValue = true;
@@ -5375,13 +5383,13 @@ function handleFlatJson(obj) {
 }
 function getLocaleMessages(locale, options) {
   const { messages, __i18n, messageResolver, flatJson } = options;
-  const ret = isPlainObject(messages) ? messages : isArray(__i18n) ? {} : { [locale]: {} };
+  const ret = isPlainObject(messages) ? messages : isArray(__i18n) ? create() : { [locale]: create() };
   if (isArray(__i18n)) {
     __i18n.forEach((custom) => {
       if ("locale" in custom && "resource" in custom) {
         const { locale: locale2, resource } = custom;
         if (locale2) {
-          ret[locale2] = ret[locale2] || {};
+          ret[locale2] = ret[locale2] || create();
           deepCopy(resource, ret[locale2]);
         } else {
           deepCopy(resource, ret);
@@ -5404,7 +5412,7 @@ function getComponentOptions(instance) {
   return instance.type;
 }
 function adjustI18nResources(gl, options, componentOptions) {
-  let messages = isObject(options.messages) ? options.messages : {};
+  let messages = isObject(options.messages) ? options.messages : create();
   if ("__i18nGlobal" in componentOptions) {
     messages = getLocaleMessages(gl.locale.value, {
       messages,
@@ -5702,7 +5710,7 @@ function createComposer(options = {}, VueI18nLegacy) {
     _messages.value[locale2] = message;
     _context.messages = _messages.value;
   }
-  function mergeLocaleMessage2(locale2, message) {
+  function mergeLocaleMessage(locale2, message) {
     _messages.value[locale2] = _messages.value[locale2] || {};
     const _message = { [locale2]: message };
     if (flatJson) {
@@ -5743,22 +5751,6 @@ function createComposer(options = {}, VueI18nLegacy) {
     clearNumberFormat(_context, locale2, format2);
   }
   composerID++;
-  if (__root && inBrowser) {
-    watch(__root.locale, (val) => {
-      if (_inheritLocale) {
-        _locale.value = val;
-        _context.locale = val;
-        updateFallbackLocale(_context, _locale.value, _fallbackLocale.value);
-      }
-    });
-    watch(__root.fallbackLocale, (val) => {
-      if (_inheritLocale) {
-        _fallbackLocale.value = val;
-        _context.fallbackLocale = val;
-        updateFallbackLocale(_context, _locale.value, _fallbackLocale.value);
-      }
-    });
-  }
   const composer = {
     id: composerID,
     locale,
@@ -5831,7 +5823,7 @@ function createComposer(options = {}, VueI18nLegacy) {
     t,
     getLocaleMessage,
     setLocaleMessage,
-    mergeLocaleMessage: mergeLocaleMessage2,
+    mergeLocaleMessage,
     getPostTranslationHandler,
     setPostTranslationHandler,
     getMissingHandler,
@@ -5894,7 +5886,7 @@ function getInterpolateArg({ slots }, keys) {
         arg[key] = slot();
       }
       return arg;
-    }, {});
+    }, create());
   }
 }
 function getFragmentableTag(tag) {
@@ -5924,7 +5916,7 @@ const TranslationImpl = /* @__PURE__ */ defineComponent({
     });
     return () => {
       const keys = Object.keys(slots).filter((key) => key !== "_");
-      const options = {};
+      const options = create();
       if (props.locale) {
         options.locale = props.locale;
       }
@@ -5933,7 +5925,7 @@ const TranslationImpl = /* @__PURE__ */ defineComponent({
       }
       const arg = getInterpolateArg(context, keys);
       const children = i18n[TranslateVNodeSymbol](props.keypath, arg, options);
-      const assignedAttrs = assign({}, attrs);
+      const assignedAttrs = assign(create(), attrs);
       const tag = isString(props.tag) || isObject(props.tag) ? props.tag : getFragmentableTag();
       return h(tag, assignedAttrs, children);
     };
@@ -5947,7 +5939,7 @@ function renderFormatter(props, context, slotKeys, partFormatter) {
   const { slots, attrs } = context;
   return () => {
     const options = { part: true };
-    let overrides = {};
+    let overrides = create();
     if (props.locale) {
       options.locale = props.locale;
     }
@@ -5958,8 +5950,8 @@ function renderFormatter(props, context, slotKeys, partFormatter) {
         options.key = props.format.key;
       }
       overrides = Object.keys(props.format).reduce((options2, prop) => {
-        return slotKeys.includes(prop) ? assign({}, options2, { [prop]: props.format[prop] }) : options2;
-      }, {});
+        return slotKeys.includes(prop) ? assign(create(), options2, { [prop]: props.format[prop] }) : options2;
+      }, create());
     }
     const parts = partFormatter(...[props.value, options, overrides]);
     let children = [options.key];
@@ -5975,7 +5967,7 @@ function renderFormatter(props, context, slotKeys, partFormatter) {
     } else if (isString(parts)) {
       children = [parts];
     }
-    const assignedAttrs = assign({}, attrs);
+    const assignedAttrs = assign(create(), attrs);
     const tag = isString(props.tag) || isObject(props.tag) ? props.tag : getFragmentableTag();
     return h(tag, assignedAttrs, children);
   };
@@ -6333,167 +6325,10 @@ function injectGlobalFields(app, composer) {
 {
   registerMessageCompiler(compile);
 }
-registerMessageResolver(resolveValue);
+registerMessageResolver(resolveValue$1);
 registerLocaleFallbacker(fallbackWithLocaleChain);
-function useSwitchLocalePath() {
-  return wrapComposable(switchLocalePath);
-}
-const switch_locale_path_ssr_5csfIgkrBP = /* @__PURE__ */ defineNuxtPlugin({
-  name: "i18n:plugin:switch-locale-path-ssr",
-  dependsOn: ["i18n:plugin"],
-  setup(nuxt) {
-    if (nuxt.$config.public.i18n.experimental.switchLocalePathLinkSSR !== true) return;
-    const switchLocalePath2 = useSwitchLocalePath();
-    const switchLocalePathLinkWrapperExpr = new RegExp(
-      [
-        `<!--${SWITCH_LOCALE_PATH_LINK_IDENTIFIER}-\\[(\\w+)\\]-->`,
-        `.+?`,
-        `<!--/${SWITCH_LOCALE_PATH_LINK_IDENTIFIER}-->`
-      ].join(""),
-      "g"
-    );
-    nuxt.hook("app:rendered", (ctx) => {
-      var _a;
-      if (((_a = ctx.renderResult) == null ? void 0 : _a.html) == null) return;
-      ctx.renderResult.html = ctx.renderResult.html.replaceAll(
-        switchLocalePathLinkWrapperExpr,
-        (match, p1) => match.replace(/href="([^"]+)"/, `href="${encodeURI(switchLocalePath2(p1 ?? ""))}"`)
-      );
-    });
-  }
-});
-function extendI18n(i18n, {
-  locales = [],
-  localeCodes: localeCodes2 = [],
-  baseUrl = "",
-  hooks = {},
-  context = {}
-} = {}) {
-  const scope = effectScope();
-  const orgInstall = i18n.install;
-  i18n.install = (vue, ...options) => {
-    const pluginOptions = isPluginOptions(options[0]) ? assign({}, options[0]) : { inject: true };
-    if (pluginOptions.inject == null) {
-      pluginOptions.inject = true;
-    }
-    const orgComposerExtend = pluginOptions.__composerExtend;
-    pluginOptions.__composerExtend = (localComposer) => {
-      const globalComposer2 = getComposer$3(i18n);
-      localComposer.locales = computed(() => globalComposer2.locales.value);
-      localComposer.localeCodes = computed(() => globalComposer2.localeCodes.value);
-      localComposer.baseUrl = computed(() => globalComposer2.baseUrl.value);
-      let orgComposerDispose;
-      if (isFunction(orgComposerExtend)) {
-        orgComposerDispose = Reflect.apply(orgComposerExtend, pluginOptions, [localComposer]);
-      }
-      return () => {
-        orgComposerDispose && orgComposerDispose();
-      };
-    };
-    if (i18n.mode === "legacy") {
-      const orgVueI18nExtend = pluginOptions.__vueI18nExtend;
-      pluginOptions.__vueI18nExtend = (vueI18n) => {
-        extendVueI18n(vueI18n, hooks.onExtendVueI18n);
-        let orgVueI18nDispose;
-        if (isFunction(orgVueI18nExtend)) {
-          orgVueI18nDispose = Reflect.apply(orgVueI18nExtend, pluginOptions, [vueI18n]);
-        }
-        return () => {
-          orgVueI18nDispose && orgVueI18nDispose();
-        };
-      };
-    }
-    options[0] = pluginOptions;
-    Reflect.apply(orgInstall, i18n, [vue, ...options]);
-    const globalComposer = getComposer$3(i18n);
-    scope.run(() => {
-      extendComposer(globalComposer, { locales, localeCodes: localeCodes2, baseUrl, hooks, context });
-      if (i18n.mode === "legacy" && isVueI18n(i18n.global)) {
-        extendVueI18n(i18n.global, hooks.onExtendVueI18n);
-      }
-    });
-    const app = vue;
-    const exported = i18n.mode === "composition" ? app.config.globalProperties.$i18n : null;
-    if (exported) {
-      extendExportedGlobal(exported, globalComposer, hooks.onExtendExportedGlobal);
-    }
-    if (pluginOptions.inject) {
-      const common = initCommonComposableOptions(i18n);
-      vue.mixin({
-        methods: {
-          getRouteBaseName: wrapComposable(getRouteBaseName, common),
-          resolveRoute: wrapComposable(resolveRoute, common),
-          localePath: wrapComposable(localePath, common),
-          localeRoute: wrapComposable(localeRoute, common),
-          localeLocation: wrapComposable(localeLocation, common),
-          switchLocalePath: wrapComposable(switchLocalePath, common),
-          localeHead: wrapComposable(localeHead, common)
-        }
-      });
-    }
-    if (app.unmount) {
-      const unmountApp = app.unmount;
-      app.unmount = () => {
-        scope.stop();
-        unmountApp();
-      };
-    }
-  };
-  return scope;
-}
-function extendComposer(composer, options) {
-  const { locales, localeCodes: localeCodes2, baseUrl, context } = options;
-  const _locales = ref(locales);
-  const _localeCodes = ref(localeCodes2);
-  const _baseUrl = ref("");
-  composer.locales = computed(() => _locales.value);
-  composer.localeCodes = computed(() => _localeCodes.value);
-  composer.baseUrl = computed(() => _baseUrl.value);
-  {
-    _baseUrl.value = resolveBaseUrl(baseUrl, context);
-  }
-  if (options.hooks && options.hooks.onExtendComposer) {
-    options.hooks.onExtendComposer(composer);
-  }
-}
-function extendPropertyDescriptors(composer, exported, hook) {
-  const properties = [
-    {
-      locales: {
-        get() {
-          return composer.locales.value;
-        }
-      },
-      localeCodes: {
-        get() {
-          return composer.localeCodes.value;
-        }
-      },
-      baseUrl: {
-        get() {
-          return composer.baseUrl.value;
-        }
-      }
-    }
-  ];
-  hook && properties.push(hook(composer));
-  for (const property of properties) {
-    for (const [key, descriptor] of Object.entries(property)) {
-      Object.defineProperty(exported, key, descriptor);
-    }
-  }
-}
-function extendExportedGlobal(exported, g, hook) {
-  extendPropertyDescriptors(g, exported, hook);
-}
-function extendVueI18n(vueI18n, hook) {
-  const c = getComposer$3(vueI18n);
-  extendPropertyDescriptors(c, vueI18n, hook);
-}
-function isPluginOptions(options) {
-  return isObject(options) && ("inject" in options || "__composerExtend" in options || "__vueI18nExtend" in options);
-}
-const i18n_sq1MuCrqbC = /* @__PURE__ */ defineNuxtPlugin({
+
+const i18n_EI7LsD1KYQADczz5hrChviGQCdVM8yUkvFEZLJpmnvM = defineNuxtPlugin({
   name: "i18n:plugin",
   parallel: parallelPlugin,
   async setup(nuxt) {
@@ -6770,7 +6605,7 @@ const i18n_sq1MuCrqbC = /* @__PURE__ */ defineNuxtPlugin({
     });
     const pluginOptions = {
       __composerExtend: (c) => {
-        const g = getComposer$3(i18n);
+        const g = getComposer$1(i18n);
         c.strategy = g.strategy;
         c.localeProperties = computed(() => g.localeProperties.value);
         c.setLocale = g.setLocale;
@@ -6791,7 +6626,7 @@ const i18n_sq1MuCrqbC = /* @__PURE__ */ defineNuxtPlugin({
     let routeChangeCount = 0;
     addRouteMiddleware(
       "locale-changing",
-      /* @__PURE__ */ defineNuxtRouteMiddleware(async (to, from) => {
+      defineNuxtRouteMiddleware(async (to, from) => {
         let __temp2, __restore2;
         const locale = detectLocale(
           to,
@@ -6829,17 +6664,20 @@ const i18n_sq1MuCrqbC = /* @__PURE__ */ defineNuxtPlugin({
     );
   }
 });
+
 const plugins = [
-  unhead_KgADcZ0jPj,
+  unhead_k2P3m_ZDyjlr2mMYnoDPwavjsDN8hBlk9cFai0bbopU,
   plugin,
-  revive_payload_server_eJ33V7gbc6,
-  components_plugin_KR1HBZs4kY,
-  switch_locale_path_ssr_5csfIgkrBP,
-  i18n_sq1MuCrqbC
+  revive_payload_server_MVtmlZaQpj6ApFmshWfUWl5PehCebzaBf2NuRMiIbms,
+  components_plugin_z4hgvsiddfKkfXTP6M8M4zG5Cb7sGnDhcryKVM45Di4,
+  switch_locale_path_ssr_NflG9_QeVcJ1jVig0vCfxB_cZhpEMQ9U2ujRUiYbbVw,
+  i18n_EI7LsD1KYQADczz5hrChviGQCdVM8yUkvFEZLJpmnvM
 ];
+
 const layouts = {
-  default: () => import('./default-Ds0qxkiw.mjs')
+  default: defineAsyncComponent(() => import('./default.vue.mjs').then((m) => m.default || m))
 };
+
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
   inheritAttrs: false,
@@ -6847,24 +6685,24 @@ const LayoutLoader = defineComponent({
     name: String,
     layoutProps: Object
   },
-  async setup(props, context) {
-    const LayoutComponent = await layouts[props.name]().then((r) => r.default || r);
-    return () => h(LayoutComponent, props.layoutProps, context.slots);
+  setup(props, context) {
+    return () => h(layouts[props.name], props.layoutProps, context.slots);
   }
 });
+const nuxtLayoutProps = {
+  name: {
+    type: [String, Boolean, Object],
+    default: null
+  },
+  fallback: {
+    type: [String, Object],
+    default: null
+  }
+};
 const __nuxt_component_0$1 = defineComponent({
   name: "NuxtLayout",
   inheritAttrs: false,
-  props: {
-    name: {
-      type: [String, Boolean, Object],
-      default: null
-    },
-    fallback: {
-      type: [String, Object],
-      default: null
-    }
-  },
+  props: nuxtLayoutProps,
   setup(props, context) {
     const nuxtApp = useNuxtApp();
     const injectedRoute = inject(PageRouteSymbol);
@@ -6884,7 +6722,7 @@ const __nuxt_component_0$1 = defineComponent({
     return () => {
       const hasLayout = layout.value && layout.value in layouts;
       const transitionProps = route.meta.layoutTransition ?? appLayoutTransition;
-      return _wrapIf(Transition, hasLayout && transitionProps, {
+      return _wrapInTransition(hasLayout && transitionProps, {
         default: () => h(Suspense, { suspensible: true, onResolve: () => {
           nextTick(done);
         } }, {
@@ -6941,7 +6779,9 @@ const LayoutProvider = defineComponent({
     };
   }
 });
-const RouteProvider = defineComponent({
+
+const defineRouteProvider = (name = "RouteProvider") => defineComponent({
+  name,
   props: {
     vnode: {
       type: Object,
@@ -6971,6 +6811,8 @@ const RouteProvider = defineComponent({
     };
   }
 });
+const RouteProvider = defineRouteProvider();
+
 const __nuxt_component_0 = defineComponent({
   name: "NuxtPage",
   inheritAttrs: false,
@@ -7022,55 +6864,28 @@ const __nuxt_component_0 = defineComponent({
             nuxtApp.callHook("page:loading:end");
           }
           previousPageKey = key;
-          const hasTransition = !!(props.transition ?? routeProps.route.meta.pageTransition ?? appPageTransition);
-          const transitionProps = hasTransition && _mergeTransitionProps([
-            props.transition,
-            routeProps.route.meta.pageTransition,
-            appPageTransition,
-            { onAfterLeave: () => {
-              nuxtApp.callHook("page:transition:finish", routeProps.Component);
-            } }
-          ].filter(Boolean));
-          const keepaliveConfig = props.keepalive ?? routeProps.route.meta.keepalive ?? appKeepalive;
-          vnode = _wrapIf(
-            Transition,
-            hasTransition && transitionProps,
-            wrapInKeepAlive(
-              keepaliveConfig,
-              h(Suspense, {
-                suspensible: true,
-                onPending: () => nuxtApp.callHook("page:start", routeProps.Component),
-                onResolve: () => {
-                  nextTick(() => nuxtApp.callHook("page:finish", routeProps.Component).then(() => nuxtApp.callHook("page:loading:end")).finally(done));
-                }
-              }, {
-                default: () => {
-                  const providerVNode = h(RouteProvider, {
-                    key: key || void 0,
-                    vnode: slots.default ? h(Fragment, void 0, slots.default(routeProps)) : routeProps.Component,
-                    route: routeProps.route,
-                    renderKey: key || void 0,
-                    trackRootNodes: hasTransition,
-                    vnodeRef: pageRef
-                  });
-                  return providerVNode;
-                }
-              })
-            )
-          ).default();
-          return vnode;
+          {
+            vnode = h(Suspense, {
+              suspensible: true
+            }, {
+              default: () => {
+                const providerVNode = h(RouteProvider, {
+                  key: key || void 0,
+                  vnode: slots.default ? normalizeSlot(slots.default, routeProps) : routeProps.Component,
+                  route: routeProps.route,
+                  renderKey: key || void 0,
+                  vnodeRef: pageRef
+                });
+                return providerVNode;
+              }
+            });
+            return vnode;
+          }
         }
       });
     };
   }
 });
-function _mergeTransitionProps(routeProps) {
-  const _props = routeProps.map((prop) => ({
-    ...prop,
-    onAfterLeave: prop.onAfterLeave ? toArray(prop.onAfterLeave) : void 0
-  }));
-  return defu(..._props);
-}
 function hasChildrenRoutes(fork, newRoute, Component) {
   if (!fork) {
     return false;
@@ -7081,6 +6896,11 @@ function hasChildrenRoutes(fork, newRoute, Component) {
   });
   return index < newRoute.matched.length - 1;
 }
+function normalizeSlot(slot, data) {
+  const slotContent = slot(data);
+  return slotContent.length === 1 ? h(slotContent[0]) : h(Fragment, void 0, slotContent);
+}
+
 const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -7088,12 +6908,12 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
+
 const _sfc_main$2 = {};
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
   const _component_NuxtLayout = __nuxt_component_0$1;
   const _component_NuxtPage = __nuxt_component_0;
-  _push(`<div${ssrRenderAttrs(_attrs)}>`);
-  _push(ssrRenderComponent(_component_NuxtLayout, null, {
+  _push(ssrRenderComponent(_component_NuxtLayout, _attrs, {
     default: withCtx((_, _push2, _parent2, _scopeId) => {
       if (_push2) {
         _push2(ssrRenderComponent(_component_NuxtPage, null, null, _parent2, _scopeId));
@@ -7105,7 +6925,6 @@ function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
     }),
     _: 1
   }, _parent));
-  _push(`</div>`);
 }
 const _sfc_setup$2 = _sfc_main$2.setup;
 _sfc_main$2.setup = (props, ctx) => {
@@ -7114,6 +6933,7 @@ _sfc_main$2.setup = (props, ctx) => {
   return _sfc_setup$2 ? _sfc_setup$2(props, ctx) : void 0;
 };
 const AppComponent = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["ssrRender", _sfc_ssrRender]]);
+
 const _sfc_main$1 = {
   __name: "nuxt-error-page",
   __ssrInlineRender: true,
@@ -7135,8 +6955,8 @@ const _sfc_main$1 = {
     const statusMessage = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import('./error-404-OBeW0w66.mjs'));
-    const _Error = defineAsyncComponent(() => import('./error-500-Bp5diZnT.mjs'));
+    const _Error404 = defineAsyncComponent(() => import('./error-404.vue.mjs'));
+    const _Error = defineAsyncComponent(() => import('./error-500.vue.mjs'));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(ErrorTemplate), mergeProps({ statusCode: unref(statusCode), statusMessage: unref(statusMessage), description: unref(description), stack: unref(stack) }, _attrs), null, _parent));
@@ -7149,6 +6969,7 @@ _sfc_main$1.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/nuxt/dist/app/components/nuxt-error-page.vue");
   return _sfc_setup$1 ? _sfc_setup$1(props, ctx) : void 0;
 };
+
 const _sfc_main = {
   __name: "nuxt-root",
   __ssrInlineRender: true,
@@ -7197,9 +7018,11 @@ _sfc_main.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/nuxt/dist/app/components/nuxt-root.vue");
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
+
 let entry;
 {
   entry = async function createNuxtAppServer(ssrContext) {
+    var _a;
     const vueApp = createApp(_sfc_main);
     const nuxt = createNuxtApp({ vueApp, ssrContext });
     try {
@@ -7207,7 +7030,7 @@ let entry;
       await nuxt.hooks.callHook("app:created", vueApp);
     } catch (error) {
       await nuxt.hooks.callHook("app:error", error);
-      nuxt.payload.error = nuxt.payload.error || createError(error);
+      (_a = nuxt.payload).error || (_a.error = createError(error));
     }
     if (ssrContext == null ? void 0 : ssrContext._renderResponse) {
       throw new Error("skipping render");
@@ -7217,5 +7040,10 @@ let entry;
 }
 const entry$1 = (ssrContext) => entry(ssrContext);
 
-export { _export_sfc as _, __nuxt_component_0 as a, resolveRouteObject as b, navigateTo as c, useNuxtApp as d, entry$1 as default, useRuntimeConfig as e, withoutTrailingSlash as f, hasProtocol as h, injectHead as i, joinURL as j, nuxtLinkDefaults as n, parseQuery as p, resolveUnrefHeadInput as r, useRouter as u, withTrailingSlash as w };
+const server = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: entry$1
+});
+
+export { _export_sfc as _, __nuxt_component_0 as a, useNuxtApp as b, useRuntimeConfig as c, withoutTrailingSlash as d, nuxtLinkDefaults as e, hasProtocol as h, joinURL as j, navigateTo as n, parseQuery as p, resolveRouteObject as r, server as s, tryUseNuxtApp as t, useRouter as u, withTrailingSlash as w };
 //# sourceMappingURL=server.mjs.map

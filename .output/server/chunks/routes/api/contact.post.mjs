@@ -1,9 +1,12 @@
-import { d as defineEventHandler, r as readBody, s as setResponseStatus } from '../../runtime.mjs';
+import { d as defineEventHandler, r as readBody, s as setResponseStatus } from '../../nitro/nitro.mjs';
 import nodemailer from 'nodemailer';
 import 'node:http';
 import 'node:https';
+import 'node:events';
+import 'node:buffer';
 import 'node:fs';
 import 'node:path';
+import 'node:crypto';
 import 'node:url';
 
 const transporter = nodemailer.createTransport({

@@ -108,7 +108,7 @@ export default {
 }
 
 .custom-select .items div {
-  font-family: AveriaSerifLibre-Regular;
+  font-family: "Averia Serif Libre", serif;
   color: #A3A3A3;
   margin: 0 1em;
   padding: 1em 0;

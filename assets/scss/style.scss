@@ -1,5 +1,17 @@
+@import 'components/common';
+@import 'components/swiper';
+@import 'components/header';
 body {
+    --header-height: 84px;
+    font-family: "Averia Serif Libre", serif;
+    font-size: 14px;
+    line-height: 20px;
+    color: #E4D3B0;
     background: url("../images/body.png") #0d0d0d;
+    @media (max-width:1199px) {
+        font-size: 12px;
+        line-height: 18px;
+    }
     @media screen and (max-width: 768px) {
         background-size: contain;
     }
@@ -12,8 +24,33 @@ a {
         color: #F4E1A1;
     }
 }
+img {
+    max-width: 100%;
+    height: auto;
+}
 .fs-20 {
     font-size: 20px;
+}
+
+.container {
+    @media (min-width: 1200px) {
+        max-width: 1152px;
+    }
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0px 1000px #0d0d0d inset!important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 .bg-dark__theme {
     background: #0d0d0d;

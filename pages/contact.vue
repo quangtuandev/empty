@@ -1,13 +1,13 @@
 <template>
-    <div class="row contact">
-        <div class="col-12 col-md-6">
-            <div class="contact-header mt-0 mt-md-5">
-                <h1 class="contact-header__title text-uppercase">
-                    Thanks for VIsItIng
-                </h1>
-                <p class="contact-header__description text-uppercase">
-                    Become a companIon wIth us
-                </p>
+        <div class="row contact">
+            <div class="col-12 col-md-6">
+                <div class="contact-header mt-0 mt-md-5">
+                    <h1 class="contact-header__title text-uppercase">
+                        Thanks for VIsItIng
+                    </h1>
+                    <p class="contact-header__description text-uppercase">
+                        Become a companIon wIth us
+                    </p>
             </div>
             <div class="col-12 col-md-6  d-md-none d-block">
                 <div class="position-relative">
@@ -181,6 +181,9 @@ async function handleSubmit() {
 }
 
 @mixin reset-input() {
+    height: 52px;
+    min-height: 52px;
+    padding: 15px 16px;
     background-color: transparent;
     border: none;
     border-radius: 0;
@@ -188,6 +191,9 @@ async function handleSubmit() {
     color: #CCCCCC;
     outline: none;
     box-shadow: none;
+    @media (max-width: 1199px) {
+        padding: 15px 8px;
+    }
     font-family: "Averia Serif Libre", serif;
     font-size: 14px;
     font-weight: 400;
@@ -245,6 +251,7 @@ async function handleSubmit() {
     }
 
     margin-top: 70px;
+    margin-bottom: 137px;
 
     @media screen and (max-width: 768px) {
         margin-top: 24px;
@@ -347,9 +354,15 @@ async function handleSubmit() {
 
         .form-floating {
             >label {
+                padding: 16px;
+                font-size: 14px;
+                line-height: 20px;
                 color: #525252;
                 --bs-body-bg: transparent;
                 font-family: "Averia Serif Libre", serif;
+                @media (max-width: 1199px) {
+                    padding: 16px 8px;
+                }
             }
 
             .form-control {
@@ -379,6 +392,10 @@ async function handleSubmit() {
                 &::after {
                     background-color: transparent;
                 }
+            }
+
+            &>.form-control-plaintext~label, &>.form-control:focus~label, &>.form-control:not(:placeholder-shown)~label, &>.form-select~label {
+                transform: scale(.85) translateY(-1rem) translateX(.15rem);
             }
         }
     }
